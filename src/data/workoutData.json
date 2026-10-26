@@ -1,0 +1,169 @@
+{
+  "user": {
+    "name": "Abo Athala",
+    "level": "Athala Level 2",
+    "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"
+  },
+  "routines": [
+    {
+      "id": "routine-1",
+      "name": "Routine 1 PPL",
+      "isTemplate": true,
+      "workouts": [
+        {
+          "id": "w-push",
+          "name": "Push",
+          "targetMuscles": ["Chest", "Shoulders", "Triceps"],
+          "exercises": [
+            { "exerciseId": "ex-bench-press", "sets": 4, "targetReps": "8-12", "targetWeightKg": 80 },
+            { "exerciseId": "ex-overhead-press", "sets": 3, "targetReps": "8-10", "targetWeightKg": 50 },
+            { "exerciseId": "ex-tricep-pushdown", "sets": 3, "targetReps": "12-15", "targetWeightKg": 35 }
+          ]
+        },
+        {
+          "id": "w-pull",
+          "name": "Pull",
+          "targetMuscles": ["Back", "Biceps"],
+          "exercises": [
+            { "exerciseId": "ex-lat-pulldown", "sets": 4, "targetReps": "10-12", "targetWeightKg": 65 },
+            { "exerciseId": "ex-barbell-row", "sets": 3, "targetReps": "8-10", "targetWeightKg": 70 },
+            { "exerciseId": "ex-bicep-curl", "sets": 3, "targetReps": "12-15", "targetWeightKg": 16 }
+          ]
+        },
+        {
+          "id": "w-legs",
+          "name": "Legs",
+          "targetMuscles": ["Quads", "Hamstrings", "Calves"],
+          "exercises": [
+            { "exerciseId": "ex-squat", "sets": 4, "targetReps": "6-8", "targetWeightKg": 100 },
+            { "exerciseId": "ex-romanian-deadlift", "sets": 3, "targetReps": "10-12", "targetWeightKg": 90 },
+            { "exerciseId": "ex-leg-press", "sets": 3, "targetReps": "12-15", "targetWeightKg": 160 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "routine-2",
+      "name": "Routine 2 Upper Lower",
+      "isTemplate": false,
+      "workouts": [
+        {
+          "id": "w-upper",
+          "name": "Upper",
+          "targetMuscles": ["Chest", "Back", "Shoulders", "Arms"],
+          "exercises": [
+            { "exerciseId": "ex-bench-press", "sets": 3, "targetReps": "8-12", "targetWeightKg": 82.5 },
+            { "exerciseId": "ex-lat-pulldown", "sets": 3, "targetReps": "10-12", "targetWeightKg": 70 }
+          ]
+        },
+        {
+          "id": "w-lower",
+          "name": "Lower",
+          "targetMuscles": ["Quads", "Hamstrings", "Glutes"],
+          "exercises": [
+            { "exerciseId": "ex-squat", "sets": 4, "targetReps": "8-10", "targetWeightKg": 105 }
+          ]
+        }
+      ]
+    }
+  ],
+  "activeSession": {
+    "sessionId": "session-active-001",
+    "title": "Push Day Routine",
+    "status": "In Progress",
+    "startTime": "2026-10-26T18:30:00Z",
+    "durationSeconds": 1845,
+    "prsCount": 2,
+    "exercisesRemaining": 2,
+    "totalVolumeKg": 3420,
+    "exercises": [
+      {
+        "id": "ex-bench-press",
+        "name": "Bench Press",
+        "category": "Chest",
+        "description": "A core compound weight training exercise where you lie on a bench and push a weight upward using a barbell or dumbbells.",
+        "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+        "sets": [
+          { "setNum": 1, "reps": 12, "weightKg": 80, "completed": true, "restTimerSec": 90 },
+          { "setNum": 2, "reps": 10, "weightKg": 80, "completed": true, "restTimerSec": 90 },
+          { "setNum": 3, "reps": 8, "weightKg": 85, "completed": true, "restTimerSec": 120 }
+        ]
+      },
+      {
+        "id": "ex-overhead-press",
+        "name": "Overhead Press",
+        "category": "Shoulders",
+        "description": "Standing barbell overhead press for building shoulder strength and core stability.",
+        "videoUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+        "sets": [
+          { "setNum": 1, "reps": 10, "weightKg": 50, "completed": false, "restTimerSec": 90 },
+          { "setNum": 2, "reps": 10, "weightKg": 50, "completed": false, "restTimerSec": 90 },
+          { "setNum": 3, "reps": 8, "weightKg": 52.5, "completed": false, "restTimerSec": 90 }
+        ]
+      }
+    ]
+  },
+  "history": [
+    {
+      "id": "hist-101",
+      "date": "2026-10-24",
+      "title": "Legs Heavy",
+      "durationMinutes": 58,
+      "totalVolumeKg": 6800,
+      "prsAchieved": 1,
+      "completedExercises": ["Barbell Squat", "Romanian Deadlift", "Leg Extension"]
+    },
+    {
+      "id": "hist-102",
+      "date": "2026-10-22",
+      "title": "Pull Routine",
+      "durationMinutes": 45,
+      "totalVolumeKg": 4900,
+      "prsAchieved": 0,
+      "completedExercises": ["Lat Pulldown", "Barbell Row", "Face Pulls", "Bicep Curl"]
+    },
+    {
+      "id": "hist-103",
+      "date": "2026-10-19",
+      "title": "Upper Body Hypertrophy",
+      "durationMinutes": 52,
+      "totalVolumeKg": 5400,
+      "prsAchieved": 2,
+      "completedExercises": ["Incline Bench Press", "Seated Cable Row", "Dumbbell Lateral Raise"]
+    }
+  ],
+  "exerciseLibrary": [
+    {
+      "id": "ex-bench-press",
+      "name": "Bench Press",
+      "category": "Chest",
+      "equipment": "Barbell",
+      "description": "A core compound weight training exercise where you lie on a bench and push a weight upward using a barbell or dumbbells.",
+      "gifThumbnail": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "ex-overhead-press",
+      "name": "Overhead Press",
+      "category": "Shoulders",
+      "equipment": "Barbell",
+      "description": "Compound upper-body exercise that targets the anterior deltoids, upper chest, and triceps.",
+      "gifThumbnail": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "ex-lat-pulldown",
+      "name": "Lat Pulldown",
+      "category": "Back",
+      "equipment": "Cable",
+      "description": "Upper-body strength training exercise designed to target the latissimus dorsi muscle.",
+      "gifThumbnail": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "ex-squat",
+      "name": "Barbell Squat",
+      "category": "Legs",
+      "equipment": "Barbell",
+      "description": "A lower-body compound movement working the quadriceps, glutes, and hamstrings.",
+      "gifThumbnail": "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80"
+    }
+  ]
+}
