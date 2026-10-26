@@ -10,7 +10,16 @@ export default function Routines() {
         <button>+ Add Routine</button>
       </div>
       {/* User Routines Container */}
-      <div></div>
+      <div>
+        
+      </div>
+      {/* Active Routine */}
+      <div>
+        <h1>Active Routine</h1>
+        <div>
+
+        </div>
+      </div>
     </div>
   );
 }
