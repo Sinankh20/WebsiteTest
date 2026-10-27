@@ -2,21 +2,55 @@ import React from "react"
 import { useState } from "react"
 import { createFileRoute } from '@tanstack/react-router'
 import dummy from '../data/workoutData.json'
+import WorkoutEditor from "../components/WorkoutEditor"
+
 export const Route = createFileRoute('/Routines')({
   component: Routines,
 })
 function Routines() {
+  const [view,setView]=useState('none')  // note views: none,editor,active
+  const [selectedRoutine, setSelectedRoutine] = useState(null)
   const [routines, setRoutines] = useState(dummy.routines)
   const activeRoutine = routines.find(routine => routine.id === "routine-1") || routines[0]
   return (
     <div>
-      {/* Top container */}
+    {view === "editor" && (
+                <WorkoutEditor 
+                    data={selectedRoutine}
+                    handleSave={(newRoutine) => {
+                      /// temp database update
+                        console.log("Saved routine:", newRoutine)
+                        setView("none")
+                    }}
+                    handleCancel={() => setView("none")}
+                />
+            )}
+      {/* {view === "active" && (
+                <ActiveSession 
+                    data={selectedRoutine}
+                    onDiscard={() => setView("none")}
+                    onComplete={(summary) => {
+                      // temp database update
+                        console.log("Saved workout summary:", summary)
+                        setView("none")
+                    }}
+                />
+            )} */}
+    
+      {view==="none"&& (
+        <>
+      // {/* Top container */}
       <div>
         <div>
           <h1>Your Routines</h1>
           <p> Add Your Routines Of Choice</p>
         </div>
-        <button>+ Add Routine</button>
+        <button
+          onClick={() => {
+                setSelectedRoutine(null) // Blank template for new routine
+                setView("editor")
+              }}
+        >+ Add Routine</button>
       </div>
       {/* User routines */}
       <div className="space-y-6 mb-8">
@@ -32,12 +66,20 @@ function Routines() {
             {/* workout chip buttons */}
             <div className="flex flex-wrap gap-2">
               {routine.workouts.map((workout) => (
-                <span 
-                  key={workout.id} 
-                  className="px-4 py-2 bg-purple-50 text-purple-800 rounded-full text-sm font-medium border border-purple-100"
-                >
-                  {workout.name}
-                </span>
+                <button
+                 className="cursor-pointer"
+                 onClick={()=>{
+                  setSelectedRoutine(workout)
+                  setView("editor")
+                }}
+                 >
+                  <span
+                    key={workout.id}
+                    className="px-4 py-2 bg-purple-50 text-purple-800 rounded-full text-sm font-medium border border-purple-100"
+                  >
+                    {workout.name}
+                  </span>
+                </button>
               ))}
             </div>
           </div>
@@ -59,11 +101,18 @@ function Routines() {
               ))}
             </div>
           </div>
-          <button className="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-sm hover:bg-purple-700 transition whitespace-nowrap">
+          <button 
+            onClick={() => {
+                    // setSelectedRoutine(activeRoutine)
+                    setView("active")
+                  }}
+            className="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-sm hover:bg-purple-700 transition whitespace-nowrap">
             Start Workout
           </button>
         </div>
       </div>
+      </>
+      )}
     </div>
   )
 }
