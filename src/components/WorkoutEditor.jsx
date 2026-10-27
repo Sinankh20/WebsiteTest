@@ -3,11 +3,11 @@ import { useState } from "react";
 export default function WorkoutEditor({
   data = { title: "New Routine", exercises: [] },
   handleSave,
-  handleCancle,
+  handleCancel,
 }) {
 
     const initialTitle = data?.title || "New Routine";
-    const initialExercises = data?.exercises && data.exercises.length > 0
+    const initialExercises = Array.isArray(data?.exercises) && data.exercises.length > 0
     ? data.exercises
     : [
         {
@@ -24,10 +24,11 @@ export default function WorkoutEditor({
   const [exercises, setExercises] = useState(initialExercises);
   
   const handleAddExercise = () => {
+    const safeExercises = Array.isArray(exercises) ? exercises : [];
     const newExId =
-      exercises.length > 0 ? exercises[exercises.length - 1].id + 1 : 1;
+      safeExercises.length > 0 ? safeExercises[safeExercises.length - 1].id + 1 : 1;
     setExercises([
-      ...exercises,
+      ...safeExercises,
       {
         id: newExId,
         name: "New Exercise",
@@ -35,34 +36,44 @@ export default function WorkoutEditor({
       },
     ]);
   };
+
   const handleDeleteExercise = (exercisesId) => {
-    setExercises(exercises.filter((item) => item.id !== exercisesId));
+    const safeExercises = Array.isArray(exercises) ? exercises : [];
+    setExercises(safeExercises.filter((item) => item.id !== exercisesId));
   };
+
   const handleAddSet = (exercisesId) => {
+    const safeExercises = Array.isArray(exercises) ? exercises : [];
     setExercises(
-      exercises.map((item) => {
-        if (exercisesId == item.id) {
+      safeExercises.map((item) => {
+        if (exercisesId === item.id) {
+          const safeSets = Array.isArray(item.sets) ? item.sets : [];
           const newSetId =
-            item.sets.length > 0 ? item.sets[item.sets.length - 1].id + 1 : 1;
+            safeSets.length > 0 ? safeSets[safeSets.length - 1].id + 1 : 1;
           return {
             ...item,
-            sets: [...item.sets, { id: newSetId, weight: 0, reps: 0 }],
+            sets: [...safeSets, { id: newSetId, weight: 0, reps: 0 }],
           };
-          
         }
         return item;
       }),
     );
   };
+
   const handleDeleteSet = (exercisesId, setId) => {
+    const safeExercises = Array.isArray(exercises) ? exercises : [];
     setExercises(
-      exercises.map((item) => {
+      safeExercises.map((item) => {
         if (item.id === exercisesId) {
-          return { ...item, sets: item.sets.filter((set) => set.id !== setId) };
+          const safeSets = Array.isArray(item.sets) ? item.sets : [];
+          return { ...item, sets: safeSets.filter((set) => set.id !== setId) };
         } else return item;
       }),
     );
   };
+
+  const safeExercisesList = Array.isArray(exercises) ? exercises : [];
+
   return (
     <div>
       {/* Header */}
@@ -77,43 +88,42 @@ export default function WorkoutEditor({
         </label>
         <div>
           <span>Duration</span>
-          {/* Timer */}
         </div>
-
         <div>
           <span>PRs</span>
-          {/* Pr Counter */}
         </div>
         <div>
           <span>Exercises</span>
-          {/* Counter 0/2 */}
         </div>
         <div>
           <span>Volume</span>
-          {/* 1000 Kg */}
         </div>
         <button onClick={handleAddExercise}>+ Add Exercise</button>
       </div>
-      {/* exercises */}
+
+      {/* Exercises */}
       <div>
-        {exercises.map((exercise) => {
+        {safeExercisesList.map((exercise) => {
+          const safeSets = Array.isArray(exercise.sets) ? exercise.sets : [];
+
           return (
-            <div>
+            <div key={exercise.id}>
               <div>
                 <input
                   type="text"
                   value={exercise.name}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const currentExercises = Array.isArray(exercises) ? exercises : [];
                     setExercises(
-                      exercises.map((item) =>
+                      currentExercises.map((item) =>
                         item.id === exercise.id
                           ? { ...item, name: e.target.value }
                           : item,
                       ),
-                    )
-                  }
+                    );
+                  }}
                 ></input>
-                <button onClick={handleDeleteExercise(exercise.id)}>
+                <button onClick={() => handleDeleteExercise(exercise.id)}>
                   Delete Exercise
                 </button>
               </div>
@@ -130,7 +140,7 @@ export default function WorkoutEditor({
                     </tr>
                   </thead>
                   <tbody>
-                    {exercise.sets.map((set, index) => {
+                    {safeSets.map((set, index) => {
                       return (
                         <tr key={set.id}>
                           <td>{index + 1}</td>
@@ -139,16 +149,18 @@ export default function WorkoutEditor({
                               type="number"
                               value={set.weight}
                               onChange={(e) => {
+                                const val = e.target.value;
+                                const currentExercises = Array.isArray(exercises) ? exercises : [];
                                 setExercises(
-                                  exercises.map((item) =>
+                                  currentExercises.map((item) =>
                                     item.id === exercise.id
                                       ? {
                                           ...item,
-                                          sets: item.sets.map((itemSet) =>
+                                          sets: (Array.isArray(item.sets) ? item.sets : []).map((itemSet) =>
                                             itemSet.id === set.id
                                               ? {
                                                   ...itemSet,
-                                                  weight: e.target.value,
+                                                  weight: val,
                                                 }
                                               : itemSet,
                                           ),
@@ -164,16 +176,18 @@ export default function WorkoutEditor({
                               type="number"
                               value={set.reps}
                               onChange={(e) => {
+                                const val = e.target.value;
+                                const currentExercises = Array.isArray(exercises) ? exercises : [];
                                 setExercises(
-                                  exercises.map((item) =>
+                                  currentExercises.map((item) =>
                                     item.id === exercise.id
                                       ? {
                                           ...item,
-                                          sets: item.sets.map((itemSet) =>
+                                          sets: (Array.isArray(item.sets) ? item.sets : []).map((itemSet) =>
                                             itemSet.id === set.id
                                               ? {
                                                   ...itemSet,
-                                                  reps: e.target.value,
+                                                  reps: val,
                                                 }
                                               : itemSet,
                                           ),
@@ -191,7 +205,6 @@ export default function WorkoutEditor({
                                 handleDeleteSet(exercise.id, set.id)
                               }
                             >
-                              {/* temp trash icon placeholder */}
                               🗑️
                             </button>
                           </td>
@@ -211,8 +224,8 @@ export default function WorkoutEditor({
 
       {/* footer */}
       <div>
-        <button onClick={handleCancle}>Discard Workout</button>
-        <button onClick={handleSave}>Complete Session</button>
+        <button onClick={handleCancel}>Discard Workout</button>
+        <button onClick={() => handleSave({ title, exercises })}>Save Workout</button>
       </div>
     </div>
   );

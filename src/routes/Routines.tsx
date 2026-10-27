@@ -19,10 +19,14 @@ function Routines() {
                     data={selectedRoutine}
                     handleSave={(newRoutine) => {
                       /// temp database update
+                        alert("Workout saved successfully!")
                         console.log("Saved routine:", newRoutine)
                         setView("none")
                     }}
-                    handleCancel={() => setView("none")}
+                    handleCancel={() => {
+                      const confirm = window.confirm("Are you sure you want to discard this workout?")
+                          if (confirm) {
+                            setView("none")}}}
                 />
             )}
       {/* {view === "active" && (
