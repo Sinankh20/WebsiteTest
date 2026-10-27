@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuideRouteImport } from './routes/Guide'
 import { Route as HistoryRouteImport } from './routes/History'
+import { Route as HomepageRouteImport } from './routes/Homepage'
 import { Route as RoutinesRouteImport } from './routes/Routines'
+import { Route as ActiveSessionIdRouteImport } from './routes/ActiveSession.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -29,9 +31,19 @@ const HistoryRoute = HistoryRouteImport.update({
   path: '/History',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HomepageRoute = HomepageRouteImport.update({
+  id: '/Homepage',
+  path: '/Homepage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoutinesRoute = RoutinesRouteImport.update({
   id: '/Routines',
   path: '/Routines',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActiveSessionIdRoute = ActiveSessionIdRouteImport.update({
+  id: '/ActiveSession/$id',
+  path: '/ActiveSession/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -39,34 +51,61 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/Guide': typeof GuideRoute
   '/History': typeof HistoryRoute
+  '/Homepage': typeof HomepageRoute
   '/Routines': typeof RoutinesRoute
+  '/ActiveSession/$id': typeof ActiveSessionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/Guide': typeof GuideRoute
   '/History': typeof HistoryRoute
+  '/Homepage': typeof HomepageRoute
   '/Routines': typeof RoutinesRoute
+  '/ActiveSession/$id': typeof ActiveSessionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/Guide': typeof GuideRoute
   '/History': typeof HistoryRoute
+  '/Homepage': typeof HomepageRoute
   '/Routines': typeof RoutinesRoute
+  '/ActiveSession/$id': typeof ActiveSessionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/Guide' | '/History' | '/Routines'
+  fullPaths:
+    | '/'
+    | '/Guide'
+    | '/History'
+    | '/Homepage'
+    | '/Routines'
+    | '/ActiveSession/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/Guide' | '/History' | '/Routines'
-  id: '__root__' | '/' | '/Guide' | '/History' | '/Routines'
+  to:
+    | '/'
+    | '/Guide'
+    | '/History'
+    | '/Homepage'
+    | '/Routines'
+    | '/ActiveSession/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/Guide'
+    | '/History'
+    | '/Homepage'
+    | '/Routines'
+    | '/ActiveSession/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GuideRoute: typeof GuideRoute
   HistoryRoute: typeof HistoryRoute
+  HomepageRoute: typeof HomepageRoute
   RoutinesRoute: typeof RoutinesRoute
+  ActiveSessionIdRoute: typeof ActiveSessionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,11 +131,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/Homepage': {
+      id: '/Homepage'
+      path: '/Homepage'
+      fullPath: '/Homepage'
+      preLoaderRoute: typeof HomepageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/Routines': {
       id: '/Routines'
       path: '/Routines'
       fullPath: '/Routines'
       preLoaderRoute: typeof RoutinesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ActiveSession/$id': {
+      id: '/ActiveSession/$id'
+      path: '/ActiveSession/$id'
+      fullPath: '/ActiveSession/$id'
+      preLoaderRoute: typeof ActiveSessionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -106,7 +159,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GuideRoute: GuideRoute,
   HistoryRoute: HistoryRoute,
+  HomepageRoute: HomepageRoute,
   RoutinesRoute: RoutinesRoute,
+  ActiveSessionIdRoute: ActiveSessionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

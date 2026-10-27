@@ -10,7 +10,7 @@ function RootLayout() {
   return (
     <>
       <nav style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
-        <Link to="/" className="[&.active]:font-bold">
+        <Link to="/Homepage" className="[&.active]:font-bold">
           Home
         </Link>{' '}
         <Link to="/Routines" className="[&.active]:font-bold">
