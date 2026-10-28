@@ -1,5 +1,6 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import React, { useState, useEffect } from "react"
+import dummy from '../data/workoutData.json' 
 
 export const Route = createFileRoute("/ActiveSession/$id")({
   component: ActiveSession,
@@ -10,7 +11,7 @@ export default function ActiveSession() {
     const { id } = Route.useParams()
     console.log("Current Workout ID:", id)
 
-    const [sessionTitle, setSessionTitle] = useState(`Active Workout #${id}`)
+    const [sessionTitle, setSessionTitle] = useState(`#${id}`)
     const [exercises, setExercises] = useState([
         {
             id: 1,
@@ -99,7 +100,24 @@ export default function ActiveSession() {
     const completedExercisesCount = exercises.filter(ex => Array.isArray(ex.sets) && ex.sets.some(s => s.done)).length
 
     const handleFinish = () => {
+        const formatDateString = (dateObj) => {
+        const year = dateObj.getFullYear()
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0')
+        const day = String(dateObj.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+        }
+        const thisWorkout={
+            id:`workout-${Date.now()}`,
+            date: formatDateString(new Date()),
+            title: sessionTitle,
+            durationMinutes: Math.floor(seconds / 60),
+            totalVolumeKg: totalVolume,
+            prsAchieved: 1,
+            completedExercises:exercises.map(ex => ex.name)
+            }
+        dummy.history=[...dummy.history,thisWorkout]
         router.navigate({ to: '/Homepage' })
+
     }
 
     const handleDiscard = () => {
@@ -181,10 +199,7 @@ export default function ActiveSession() {
                                                     value={set.weight} 
                                                     onChange={(e) => {
                                                         const val = e.target.value
-                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {
-                                                            ...ex,
-                                                            sets: ex.sets.map(s => s.id === set.id ? { ...s, weight: val } : s)
-                                                        } : ex))
+                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {...ex,sets: ex.sets.map(s => s.id === set.id ? { ...s, weight: val } : s)} : ex))
                                                     }}
                                                 />
                                             </td>
@@ -194,10 +209,7 @@ export default function ActiveSession() {
                                                     value={set.reps} 
                                                     onChange={(e) => {
                                                         const val = e.target.value
-                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {
-                                                            ...ex,
-                                                            sets: ex.sets.map(s => s.id === set.id ? { ...s, reps: val } : s)
-                                                        } : ex))
+                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {...ex,sets: ex.sets.map(s => s.id === set.id ? { ...s, reps: val } : s)} : ex))
                                                     }}
                                                 />
                                             </td>

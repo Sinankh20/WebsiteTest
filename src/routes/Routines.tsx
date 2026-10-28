@@ -148,9 +148,9 @@ const handleDeleteRoutine = (routineId) => {
                         setSelectedRoutine(null)
                         setView("editor")
                       }}
-                                className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-4 py-1.5 rounded-xl text-sm font-medium transition">
+                        className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-4 py-1.5 rounded-xl text-sm font-medium transition">
                   Add Workout
-                                </button>
+                    </button>
                 </div>
             </div>
             
