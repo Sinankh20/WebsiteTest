@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+
 export default function WorkoutEditor({
   data = { title: "New Workout", exercises: [] },
   routineName,
@@ -7,28 +8,30 @@ export default function WorkoutEditor({
   handleDelete,
   handleCancel,
 }) {
-
-    const initialTitle = data?.title || "New Workout";
-    const initialExercises = Array.isArray(data?.exercises) && data.exercises.length > 0
-    ? data.exercises
-    : [
-        {
-          id: 1,
-          name: "Barbell Bench Press",
-          sets: [
-            { id: 1, weight: 80, reps: 10 },
-            { id: 2, weight: 85, reps: 8 },
-          ],
-        },
-      ];
+  const initialTitle = data?.title || "New Workout";
+  const initialExercises =
+    Array.isArray(data?.exercises) && data.exercises.length > 0
+      ? data.exercises
+      : [
+          {
+            id: 1,
+            name: "Barbell Bench Press",
+            sets: [
+              { id: 1, weight: 80, reps: 10 },
+              { id: 2, weight: 85, reps: 8 },
+            ],
+          },
+        ];
 
   const [title, setTitle] = useState(initialTitle);
   const [exercises, setExercises] = useState(initialExercises);
-  
+
   const handleAddExercise = () => {
     const safeExercises = Array.isArray(exercises) ? exercises : [];
     const newExId =
-      safeExercises.length > 0 ? safeExercises[safeExercises.length - 1].id + 1 : 1;
+      safeExercises.length > 0
+        ? safeExercises[safeExercises.length - 1].id + 1
+        : 1;
     setExercises([
       ...safeExercises,
       {
@@ -77,45 +80,64 @@ export default function WorkoutEditor({
   const safeExercisesList = Array.isArray(exercises) ? exercises : [];
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <label>
-          Session Title
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          ></input>
-        </label>
-        <div>
-          <span>Duration</span>
+      <div className="p-6 border rounded-lg space-y-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col gap-1 w-full md:w-auto">
+            <label className="text-xs">Session Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="text-xl font-bold border-b focus:outline-none px-1 py-0.5 w-full"
+            />
+          </div>
+          <button
+            onClick={handleAddExercise}
+            className="border px-4 py-2 rounded text-sm font-medium whitespace-nowrap"
+          >
+            + Add Exercise
+          </button>
         </div>
-        <div>
-          <span>PRs</span>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t text-center">
+          <div className="p-3 border rounded-lg">
+            <span className="block text-xs mb-1">Duration</span>
+            <span className="text-base font-bold">-</span>
+          </div>
+          <div className="p-3 border rounded-lg">
+            <span className="block text-xs mb-1">PRs</span>
+            <span className="text-base font-bold">-</span>
+          </div>
+          <div className="p-3 border rounded-lg">
+            <span className="block text-xs mb-1">Exercises</span>
+            <span className="text-base font-bold">
+              {safeExercisesList.length}
+            </span>
+          </div>
+          <div className="p-3 border rounded-lg">
+            <span className="block text-xs mb-1">Volume</span>
+            <span className="text-base font-bold">-</span>
+          </div>
         </div>
-        <div>
-          <span>Exercises</span>
-        </div>
-        <div>
-          <span>Volume</span>
-        </div>
-        <button onClick={handleAddExercise}>+ Add Exercise</button>
       </div>
 
       {/* Exercises */}
-      <div>
+      <div className="space-y-6">
         {safeExercisesList.map((exercise) => {
           const safeSets = Array.isArray(exercise.sets) ? exercise.sets : [];
 
           return (
-            <div key={exercise.id}>
-              <div>
+            <div key={exercise.id} className="p-6 border rounded-lg space-y-4">
+              <div className="flex justify-between items-center gap-4">
                 <input
                   type="text"
                   value={exercise.name}
                   onChange={(e) => {
-                    const currentExercises = Array.isArray(exercises) ? exercises : [];
+                    const currentExercises = Array.isArray(exercises)
+                      ? exercises
+                      : [];
                     setExercises(
                       currentExercises.map((item) =>
                         item.id === exercise.id
@@ -124,41 +146,54 @@ export default function WorkoutEditor({
                       ),
                     );
                   }}
-                ></input>
-                <button onClick={() => handleDeleteExercise(exercise.id)}>
+                  className="text-base font-bold border-b focus:outline-none px-1 py-0.5 w-full"
+                />
+                <button
+                  onClick={() => handleDeleteExercise(exercise.id)}
+                  className="border px-3 py-1.5 rounded text-xs whitespace-nowrap"
+                >
                   Delete Exercise
                 </button>
               </div>
 
-              {/* sets tables */}
-              <div>
-                <table>
+              {/* Sets tables */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr>
-                      <th>Sets</th>
-                      <th>Weight</th>
-                      <th>Reps</th>
-                      <th>TEST</th>
+                    <tr className="border-b text-xs font-semibold">
+                      <th className="py-2 px-3">Sets</th>
+                      <th className="py-2 px-3">Weight</th>
+                      <th className="py-2 px-3">Reps</th>
+                      <th className="py-2 px-3 text-center">TEST</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="divide-y">
                     {safeSets.map((set, index) => {
                       return (
                         <tr key={set.id}>
-                          <td>{index + 1}</td>
-                          <td>
+                          <td className="py-3 px-3 text-xs font-bold">
+                            #{index + 1}
+                          </td>
+                          <td className="py-3 px-3">
                             <input
                               type="number"
                               value={set.weight}
                               onChange={(e) => {
                                 const val = e.target.value;
-                                const currentExercises = Array.isArray(exercises) ? exercises : [];
+                                const currentExercises = Array.isArray(
+                                  exercises,
+                                )
+                                  ? exercises
+                                  : [];
                                 setExercises(
                                   currentExercises.map((item) =>
                                     item.id === exercise.id
                                       ? {
                                           ...item,
-                                          sets: (Array.isArray(item.sets) ? item.sets : []).map((itemSet) =>
+                                          sets: (Array.isArray(item.sets)
+                                            ? item.sets
+                                            : []
+                                          ).map((itemSet) =>
                                             itemSet.id === set.id
                                               ? {
                                                   ...itemSet,
@@ -171,21 +206,29 @@ export default function WorkoutEditor({
                                   ),
                                 );
                               }}
-                            ></input>
+                              className="w-15 border rounded px-2.5 py-1.5 text-xs focus:outline-none"
+                            />
                           </td>
-                          <td>
+                          <td className="py-3 px-3">
                             <input
                               type="number"
                               value={set.reps}
                               onChange={(e) => {
                                 const val = e.target.value;
-                                const currentExercises = Array.isArray(exercises) ? exercises : [];
+                                const currentExercises = Array.isArray(
+                                  exercises,
+                                )
+                                  ? exercises
+                                  : [];
                                 setExercises(
                                   currentExercises.map((item) =>
                                     item.id === exercise.id
                                       ? {
                                           ...item,
-                                          sets: (Array.isArray(item.sets) ? item.sets : []).map((itemSet) =>
+                                          sets: (Array.isArray(item.sets)
+                                            ? item.sets
+                                            : []
+                                          ).map((itemSet) =>
                                             itemSet.id === set.id
                                               ? {
                                                   ...itemSet,
@@ -198,11 +241,12 @@ export default function WorkoutEditor({
                                   ),
                                 );
                               }}
-                            ></input>
+                              className="w-15 border rounded px-2.5 py-1.5 text-xs focus:outline-none"
+                            />
                           </td>
-                          <td>
+                          <td className="py-3 px-3 text-center">
                             <button
-                              className="cursor-pointer"
+                              className="text-sm p-1"
                               onClick={() =>
                                 handleDeleteSet(exercise.id, set.id)
                               }
@@ -216,7 +260,10 @@ export default function WorkoutEditor({
                   </tbody>
                 </table>
               </div>
-              <button onClick={() => handleAddSet(exercise.id)}>
+              <button
+                onClick={() => handleAddSet(exercise.id)}
+                className="border px-4 py-2 rounded text-xs font-medium w-full md:w-auto"
+              >
                 + Add Set
               </button>
             </div>
@@ -224,15 +271,30 @@ export default function WorkoutEditor({
         })}
       </div>
 
-      {/* footer */}
-      <div>
-        <button onClick={handleCancel}>Discard</button>
+      {/* Footer */}
+      <div className="p-4 border rounded-lg flex flex-1 justify-between items-center gap-4">
         {handleDelete && (
-        <button onClick={handleDelete} style={{ color: "red" }}>
-          Delete Workout
-        </button>
+          <button
+            onClick={handleDelete}
+            className="border px-5 py-2.5 rounded text-sm font-medium "
+          >
+            Delete
+          </button>
         )}
-        <button onClick={() => handleSave({ title, exercises })}>Save Workout</button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleCancel}
+            className="border px-3.5 py-2.5 rounded text-sm font-medium"
+          >
+            Discard
+          </button>
+          <button
+            onClick={() => handleSave({ title, exercises })}
+            className="border px-6 py-2.5 rounded text-sm font-medium"
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );
