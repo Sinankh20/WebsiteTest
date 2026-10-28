@@ -190,7 +190,7 @@ export default function ActiveSession() {
     };
     dummy.history = [...dummy.history, thisWorkout];
     localStorage.clear()
-    router.navigate({ to: "/Homepage" });
+    router.navigate({ to: "/" });
   };
 
   const handleDiscard = () => {
