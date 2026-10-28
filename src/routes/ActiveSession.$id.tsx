@@ -49,21 +49,54 @@ export default function ActiveSession() {
         }))
     }
 
+    const handleAddExercise = () => {
+        const safeExercises = Array.isArray(exercises) ? exercises : []
+        const newExId = safeExercises.length > 0 ? safeExercises[safeExercises.length - 1].id + 1 : 1
+        setExercises([
+            ...safeExercises,
+            {
+                id: newExId,
+                name: "New Exercise",
+                sets: [{ id: 1, weight: 0, reps: 0, done: false }],
+            },
+        ])
+    }
+
+    const handleDeleteExercise = (exerciseId) => {
+        setExercises(exercises.filter((item) => item.id !== exerciseId))
+    }
+
     const handleAddSet = (exerciseId) => {
         setExercises(exercises.map(ex => {
             if (ex.id === exerciseId) {
-                const newSetId = ex.sets.length > 0 ? ex.sets[ex.sets.length - 1].id + 1 : 1
-                return {...ex,sets: [...ex.sets, { id: newSetId, weight: 0, reps: 0, done: false }]
+                const safeSets = Array.isArray(ex.sets) ? ex.sets : []
+                const newSetId = safeSets.length > 0 ? safeSets[safeSets.length - 1].id + 1 : 1
+                return {
+                    ...ex,
+                    sets: [...safeSets, { id: newSetId, weight: 0, reps: 0, done: false }]
                 }
             }
             return ex
         }))
     }
 
-    const totalVolume = exercises.reduce((acc, ex) => {
-        return acc + ex.sets.reduce((setAcc, s) => setAcc + (s.done ? (Number(s.weight) * Number(s.reps)) : 0), 0)}, 0)
+    const handleDeleteSet = (exerciseId, setId) => {
+        setExercises(
+            exercises.map((item) => {
+                if (item.id === exerciseId) {
+                    const safeSets = Array.isArray(item.sets) ? item.sets : []
+                    return { ...item, sets: safeSets.filter((set) => set.id !== setId) }
+                }
+                return item
+            })
+        )
+    }
 
-    const completedExercisesCount = exercises.filter(ex => ex.sets.some(s => s.done)).length
+    const totalVolume = exercises.reduce((acc, ex) => {
+        return acc + (Array.isArray(ex.sets) ? ex.sets.reduce((setAcc, s) => setAcc + (s.done ? (Number(s.weight) * Number(s.reps)) : 0), 0) : 0)
+    }, 0)
+
+    const completedExercisesCount = exercises.filter(ex => Array.isArray(ex.sets) && ex.sets.some(s => s.done)).length
 
     const handleFinish = () => {
         router.navigate({ to: '/Homepage' })
@@ -78,7 +111,11 @@ export default function ActiveSession() {
             {/* Header */}
             <div>
                 <div>
-                    <h1>{sessionTitle}</h1>
+                    <input
+                        type="text"
+                        value={sessionTitle}
+                        onChange={(e) => setSessionTitle(e.target.value)}
+                    />
                     <span>● Live Workout (ID: {id})</span>
                 </div>
 
@@ -96,13 +133,32 @@ export default function ActiveSession() {
                         <span>{totalVolume} Kg</span>
                     </div>
                 </div>
+                <button onClick={handleAddExercise}>+ Add Exercise</button>
             </div>
 
             {/* Exercises List */}
             <div>
                 {exercises.map((exercise) => (
                     <div key={exercise.id}>
-                        <h2>{exercise.name}</h2>
+                        <div>
+                            <input
+                                type="text"
+                                value={exercise.name}
+                                onChange={(e) => {
+                                    const val = e.target.value
+                                    setExercises(
+                                        exercises.map((item) =>
+                                            item.id === exercise.id
+                                                ? { ...item, name: val }
+                                                : item
+                                        )
+                                    )
+                                }}
+                            />
+                            <button onClick={() => handleDeleteExercise(exercise.id)}>
+                                Delete Exercise
+                            </button>
+                        </div>
 
                         <div>
                             <table>
@@ -112,6 +168,7 @@ export default function ActiveSession() {
                                         <th>Weight</th>
                                         <th>Reps</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,7 +181,10 @@ export default function ActiveSession() {
                                                     value={set.weight} 
                                                     onChange={(e) => {
                                                         const val = e.target.value
-                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {...ex,sets: ex.sets.map(s => s.id === set.id ? { ...s, weight: val } : s)} : ex))
+                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {
+                                                            ...ex,
+                                                            sets: ex.sets.map(s => s.id === set.id ? { ...s, weight: val } : s)
+                                                        } : ex))
                                                     }}
                                                 />
                                             </td>
@@ -134,7 +194,10 @@ export default function ActiveSession() {
                                                     value={set.reps} 
                                                     onChange={(e) => {
                                                         const val = e.target.value
-                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {...ex,sets: ex.sets.map(s => s.id === set.id ? { ...s, reps: val } : s)} : ex))
+                                                        setExercises(exercises.map(ex => ex.id === exercise.id ? {
+                                                            ...ex,
+                                                            sets: ex.sets.map(s => s.id === set.id ? { ...s, reps: val } : s)
+                                                        } : ex))
                                                     }}
                                                 />
                                             </td>
@@ -143,6 +206,13 @@ export default function ActiveSession() {
                                                     onClick={() => handleToggleSet(exercise.id, set.id)}
                                                 >
                                                     {set.done ? "✓ Done" : "Mark"}
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button 
+                                                    onClick={() => handleDeleteSet(exercise.id, set.id)}
+                                                >
+                                                    🗑️
                                                 </button>
                                             </td>
                                         </tr>

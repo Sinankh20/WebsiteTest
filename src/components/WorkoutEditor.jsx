@@ -1,12 +1,13 @@
 import React from "react";
 import { useState } from "react";
 export default function WorkoutEditor({
-  data = { title: "New Routine", exercises: [] },
+  data = { title: "New Workout", exercises: [] },
+  routineName,
   handleSave,
   handleCancel,
 }) {
 
-    const initialTitle = data?.title || "New Routine";
+    const initialTitle = data?.title || "New Workout";
     const initialExercises = Array.isArray(data?.exercises) && data.exercises.length > 0
     ? data.exercises
     : [

@@ -8,27 +8,52 @@ export const Route = createFileRoute('/Routines')({
   component: Routines,
 })
 function Routines() {
-  const [view,setView]=useState('none')  // note views: none,editor,active
+  const [view, setView] = useState('none')  // none,editor,active
   const [selectedRoutine, setSelectedRoutine] = useState(null)
+  const [targetRoutineId, setTargetRoutineId] = useState(null)
   const [routines, setRoutines] = useState(dummy.routines)
-  const activeRoutine = routines.find(routine => routine.id === "routine-1") || routines[0]
+  
+  const activeRoutine = routines.find(routine => routine.isTemplate === true) || routines[0]
+  const targetRoutine = routines.find(routine => routine.id === targetRoutineId)
   return (
     <div>
     {view === "editor" && (
                 <WorkoutEditor 
                     data={selectedRoutine}
-                    handleSave={(newRoutine) => {
+                    routineName={targetRoutine?.name}
+                    handleSave={(newWorkoutData) => {
                       /// temp database update
                         alert("Workout saved successfully!")
-                        console.log("Saved routine:", newRoutine)
+                        console.log("Saved routine:", newWorkoutData)
+                        
+                        const newWorkout = {
+                          id: `workout-${Date.now()}`,
+                          name: newWorkoutData.title,
+                          exercises: newWorkoutData.exercises
+                        }
+
+                        const updatedRoutines = routines.map(routine => {
+                          if (routine.id === targetRoutineId) {
+                            return {
+                              ...routine,
+                              workouts: [...routine.workouts, newWorkout]
+                            }
+                          }
+                          return routine
+                        })
+
+                        setRoutines(updatedRoutines)
+                        dummy.routines = updatedRoutines
                         setView("none")
                     }}
                     handleCancel={() => {
                       const confirm = window.confirm("Are you sure you want to discard this workout?")
-                          if (confirm) {
-                            setView("none")}}}
+                      if (confirm) {
+                        setView("none")
+                      }
+                    }}
                 />
-            )}
+              )}
       {/* {view === "active" && (
                 <ActiveSession 
                     data={selectedRoutine}
@@ -51,7 +76,7 @@ function Routines() {
         </div>
         <button
           onClick={() => {
-                setSelectedRoutine(null) // Blank template for new routine
+                setSelectedRoutine(null) 
                 setView("editor")
               }}
         >+ Add Routine</button>
@@ -62,7 +87,13 @@ function Routines() {
           <div key={routine.id} className="bg-white p-6 rounded-2xl shadow-sm border border-purple-100">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800">{routine.name}</h2>
-              <button className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-4 py-1.5 rounded-xl text-sm font-medium transition">
+              <button
+              onClick={() => {
+                      setTargetRoutineId(routine.id)
+                      setSelectedRoutine(null) // Blank template for new routine
+                      setView("editor")
+                    }}
+              className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-4 py-1.5 rounded-xl text-sm font-medium transition">
                 Add Workout
               </button>
             </div>

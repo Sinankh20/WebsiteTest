@@ -1,73 +1,47 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import dummy from '../data/workoutData.json';
 import { Link } from '@tanstack/react-router'
 
 export default function RoutineChoice() {
-    const inputRef = useRef(null);
     const [activeRoutine, setActiveRoutine] = useState(
-        dummy.routines.find(routine => routine.isTemplate === true) || dummy.routines[0]);
-    const [routineQuery, setRoutineQuery] = useState(activeRoutine?.name || "");
-    const [queryContainer, setQueryContainer] = useState('hidden');
-
-    const filteredRoutines = dummy.routines.filter((routine) => 
-        routine.name.toLowerCase().includes(routineQuery.toLowerCase())
+        dummy.routines.find(routine => routine.isTemplate === true) || dummy.routines[0]
     );
 
     return (
         <div>
             <div>
-                <label>Current active Routine
-                    <input
-                        ref={inputRef}
-                        value={routineQuery}
+                <label>
+                    Current active Routine:
+                    <select
+                        value={activeRoutine.name}
                         onChange={(e) => {
-                            setQueryContainer('');
-                            setRoutineQuery(e.target.value);
+                            const selectedName = e.target.value;
+                            const newRoutine = dummy.routines.find(routine => routine.name === selectedName);
+                            if (newRoutine) {
+                                dummy.routines.forEach(routine => routine.isTemplate = (routine.name === selectedName));
+                                setActiveRoutine(newRoutine);
+                            }
                         }}
-                    />
+                    >
+                        {dummy.routines.map((routine) => (
+                            <option key={routine.name} value={routine.name}>
+                                {routine.name}
+                            </option>
+                        ))}
+                    </select>
                 </label>
-                <button
-                    onClick={() => {
-                        const typedName = inputRef.current?.value;
-                        const newRoutine = dummy.routines.find(routine => routine.name === typedName);
-                        if (newRoutine) {
-                            activeRoutine.isTemplate = false;
-                            newRoutine.isTemplate = true;
-                            setActiveRoutine(newRoutine);
-                            setQueryContainer('hidden');
-                        }
-                    }}
-                >
-                    Set Active
-                </button>
-            
-                <div className={queryContainer}>
-                    {filteredRoutines.map((routine) => (
-                        <button
-                            key={routine.name}
-                            onClick={() => {
-                                if (inputRef.current) {
-                                    inputRef.current.value = routine.name;
-                                }
-                                setRoutineQuery(routine.name);
-                                setQueryContainer('hidden');
-                            }}
-                        >
-                            {routine.name}
-                        </button>
-                    ))}
-                </div>
+
                 <div>
                     <h2>Choose Workout</h2>
                     <div>
                         {activeRoutine?.workouts?.map((workout, index) => (
                             <Link 
-                            to={`/ActiveSession/$id`} 
-                            params={{ id: String(workout.id)}}
-                            className="[&.active]:font-bold">
-                            <button
-                            key={index}
-                            >{workout.name}</button>
+                                key={workout.id || index}
+                                to={`/ActiveSession/$id`} 
+                                params={{ id: String(workout.id || index) }}
+                                className="block p-2 my-1 bg-gray-200 rounded text-center [&.active]:font-bold"
+                            >
+                                {workout.name}
                             </Link>
                         ))}
                     </div>
@@ -76,6 +50,3 @@ export default function RoutineChoice() {
         </div>
     );
 }
-
-
-

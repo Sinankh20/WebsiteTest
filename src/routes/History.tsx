@@ -9,11 +9,18 @@ export const Route = createFileRoute('/History')({
 
 function History() {
     const [view, setView] = useState("list") // "list" or "calendar"
-    const [date, setDate] = useState(new Date()) // Selected calendar date
+    const [date, setDate] = useState(new Date())
+
+    const [currentPage,setCurrentPage]=useState(1)
+    const itemsPerPage=5
     
     const historyList = dummy.history
+    const pages= Math.ceil(historyList.length/itemsPerPage)
+    const startingIndex= (currentPage-1)*itemsPerPage
+    const finalHistoryList=historyList.slice(startingIndex,startingIndex+itemsPerPage)
 
-    // Helper to format a Date object into "YYYY-MM-DD" string for matching
+    const handlePrevPage=()=> setCurrentPage(Math.max(prev=> prev-1,1))
+    const handleNextPage=()=>setCurrentPage(Math.min(prev=> prev+1,pages))
     const formatDateString = (dateObj) => {
         const year = dateObj.getFullYear()
         const month = String(dateObj.getMonth() + 1).padStart(2, '0')
@@ -21,7 +28,6 @@ function History() {
         return `${year}-${month}-${day}`
     }
 
-    // Find workout matching the currently selected calendar date
     const selectedDateString = formatDateString(date)
     const selectedWorkout = historyList.find(item => item.date === selectedDateString)
 
@@ -138,9 +144,9 @@ function History() {
             )}
 
             {/* history mapping*/}
-            {view === "list" && (
+           {view === "list" && (
                 <div className="space-y-4">
-                    {historyList.map((item) => (
+                    {finalHistoryList.map((item) => (
                         <div key={item.id} className="bg-white p-5 rounded-2xl shadow-sm border border-purple-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <div className="flex items-center gap-2 mb-1">
@@ -165,6 +171,39 @@ function History() {
                             </button>
                         </div>
                     ))}
+
+                    {/* pagination */}
+                    {pages > 1 && (
+                        <div className="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-purple-100 mt-6">
+                            <button 
+                                onClick={handlePrevPage}
+                                disabled={currentPage === 1}
+                                className={`px-4 py-2 rounded-xl text-xs font-medium transition border ${
+                                    currentPage === 1 
+                                        ? "bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed" 
+                                        : "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100"
+                                }`}
+                            >
+                                Previous
+                            </button>
+                            
+                            <span className="text-xs font-semibold text-gray-600">
+                                Page {currentPage} of {pages}
+                            </span>
+
+                            <button 
+                                onClick={handleNextPage}
+                                disabled={currentPage === pages}
+                                className={`px-4 py-2 rounded-xl text-xs font-medium transition border ${
+                                    currentPage === pages 
+                                        ? "bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed" 
+                                        : "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100"
+                                }`}
+                            >
+                                Next
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
