@@ -10,16 +10,16 @@ function RootLayout() {
   return (
     <>
       <nav style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
-        <Link to="/Homepage" className="[&.active]:font-bold">
+        <Link to="/" className="">
           Home
         </Link>{' '}
-        <Link to="/Routines" className="[&.active]:font-bold">
+        <Link to="/Routines" className="">
           Routines
         </Link>
-        <Link to="/History" className="[&.active]:font-bold">
+        <Link to="/History" className="">
           Workout History
         </Link>
-        <Link to="/Guide" className="[&.active]:font-bold">
+        <Link to="/Guide" className="">
           Guide
         </Link>
       </nav>

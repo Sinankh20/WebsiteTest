@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuideRouteImport } from './routes/Guide'
 import { Route as HistoryRouteImport } from './routes/History'
-import { Route as HomepageRouteImport } from './routes/Homepage'
 import { Route as RoutinesRouteImport } from './routes/Routines'
 import { Route as ActiveSessionIdRouteImport } from './routes/ActiveSession.$id'
 
@@ -31,11 +30,6 @@ const HistoryRoute = HistoryRouteImport.update({
   path: '/History',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomepageRoute = HomepageRouteImport.update({
-  id: '/Homepage',
-  path: '/Homepage',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RoutinesRoute = RoutinesRouteImport.update({
   id: '/Routines',
   path: '/Routines',
@@ -51,7 +45,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/Guide': typeof GuideRoute
   '/History': typeof HistoryRoute
-  '/Homepage': typeof HomepageRoute
   '/Routines': typeof RoutinesRoute
   '/ActiveSession/$id': typeof ActiveSessionIdRoute
 }
@@ -59,7 +52,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/Guide': typeof GuideRoute
   '/History': typeof HistoryRoute
-  '/Homepage': typeof HomepageRoute
   '/Routines': typeof RoutinesRoute
   '/ActiveSession/$id': typeof ActiveSessionIdRoute
 }
@@ -68,33 +60,19 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/Guide': typeof GuideRoute
   '/History': typeof HistoryRoute
-  '/Homepage': typeof HomepageRoute
   '/Routines': typeof RoutinesRoute
   '/ActiveSession/$id': typeof ActiveSessionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/Guide'
-    | '/History'
-    | '/Homepage'
-    | '/Routines'
-    | '/ActiveSession/$id'
+  fullPaths: '/' | '/Guide' | '/History' | '/Routines' | '/ActiveSession/$id'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/Guide'
-    | '/History'
-    | '/Homepage'
-    | '/Routines'
-    | '/ActiveSession/$id'
+  to: '/' | '/Guide' | '/History' | '/Routines' | '/ActiveSession/$id'
   id:
     | '__root__'
     | '/'
     | '/Guide'
     | '/History'
-    | '/Homepage'
     | '/Routines'
     | '/ActiveSession/$id'
   fileRoutesById: FileRoutesById
@@ -103,7 +81,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GuideRoute: typeof GuideRoute
   HistoryRoute: typeof HistoryRoute
-  HomepageRoute: typeof HomepageRoute
   RoutinesRoute: typeof RoutinesRoute
   ActiveSessionIdRoute: typeof ActiveSessionIdRoute
 }
@@ -131,13 +108,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/Homepage': {
-      id: '/Homepage'
-      path: '/Homepage'
-      fullPath: '/Homepage'
-      preLoaderRoute: typeof HomepageRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/Routines': {
       id: '/Routines'
       path: '/Routines'
@@ -159,7 +129,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GuideRoute: GuideRoute,
   HistoryRoute: HistoryRoute,
-  HomepageRoute: HomepageRoute,
   RoutinesRoute: RoutinesRoute,
   ActiveSessionIdRoute: ActiveSessionIdRoute,
 }
