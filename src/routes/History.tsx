@@ -19,8 +19,8 @@ function History() {
     const startingIndex= (currentPage-1)*itemsPerPage
     const finalHistoryList=historyList.slice(startingIndex,startingIndex+itemsPerPage)
 
-    const handlePrevPage=()=> setCurrentPage(Math.max(prev=> prev-1,1))
-    const handleNextPage=()=>setCurrentPage(Math.min(prev=> prev+1,pages))
+    const handlePrevPage=()=> setCurrentPage(prev=>Math.max(prev-1,1))
+    const handleNextPage=()=>setCurrentPage(prev=>Math.min(prev+1,pages))
     const formatDateString = (dateObj) => {
         const year = dateObj.getFullYear()
         const month = String(dateObj.getMonth() + 1).padStart(2, '0')
@@ -75,7 +75,10 @@ function History() {
                 {/* Toggle view */}
                 <div className="flex bg-purple-50 p-1 rounded-xl border border-purple-100">
                     <button 
-                        onClick={() => setView("list")}
+                        onClick={() => {
+                            setView("list")
+                            setCurrentPage(1)
+                        }}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                             view === "list" ? "bg-purple-600 text-white shadow-sm" : "text-purple-700 hover:bg-purple-100"
                         }`}
