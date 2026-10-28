@@ -4,6 +4,7 @@ export default function WorkoutEditor({
   data = { title: "New Workout", exercises: [] },
   routineName,
   handleSave,
+  handleDelete,
   handleCancel,
 }) {
 
@@ -225,7 +226,12 @@ export default function WorkoutEditor({
 
       {/* footer */}
       <div>
-        <button onClick={handleCancel}>Discard Workout</button>
+        <button onClick={handleCancel}>Discard</button>
+        {handleDelete && (
+        <button onClick={handleDelete} style={{ color: "red" }}>
+          Delete Workout
+        </button>
+        )}
         <button onClick={() => handleSave({ title, exercises })}>Save Workout</button>
       </div>
     </div>

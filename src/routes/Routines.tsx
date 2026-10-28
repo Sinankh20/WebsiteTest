@@ -15,6 +15,25 @@ function Routines() {
   
   const activeRoutine = routines.find(routine => routine.isTemplate === true) || routines[0]
   const targetRoutine = routines.find(routine => routine.id === targetRoutineId)
+
+  const handleRoutineNameChange = (routineId, newName) => {
+    const updatedRoutines = routines.map(routine => {
+      if (routine.id === routineId) {
+        return { ...routine, name: newName }
+      }
+      return routine
+    })
+    setRoutines(updatedRoutines)
+    dummy.routines = updatedRoutines
+  }
+const handleDeleteRoutine = (routineId) => {
+    const confirm = window.confirm("Are you sure you want to delete this routine?")
+    if (confirm) {
+      const updatedRoutines = routines.filter(routine => routine.id !== routineId)
+      setRoutines(updatedRoutines)
+      dummy.routines = updatedRoutines
+    }
+  }
   return (
     <div>
     {view === "editor" && (
@@ -46,6 +65,23 @@ function Routines() {
                         dummy.routines = updatedRoutines
                         setView("none")
                     }}
+                    handleDelete={selectedRoutine ? () => {
+                        const confirm = window.confirm("Are you sure you want to delete this workout?")
+                        if (confirm) {
+                          const updatedRoutines = routines.map(routine => {
+                            if (routine.id === targetRoutineId) {
+                              return {
+                                ...routine,
+                                workouts: routine.workouts.filter(w => w.id !== selectedRoutine.id)
+                              }
+                            }
+                            return routine
+                          })
+                          setRoutines(updatedRoutines)
+                          dummy.routines = updatedRoutines
+                          setView("none")
+                        }
+                      } : null}
                     handleCancel={() => {
                       const confirm = window.confirm("Are you sure you want to discard this workout?")
                       if (confirm) {
@@ -76,8 +112,15 @@ function Routines() {
         </div>
         <button
           onClick={() => {
-                setSelectedRoutine(null) 
-                setView("editor")
+            const newRoutine = {
+              id: `routine-${Date.now()}`,
+              name: `New Routine ${routines.length + 1}`,
+              isTemplate: false,
+              workouts: []
+            }
+            const updatedRoutines = [...routines, newRoutine]
+            setRoutines(updatedRoutines)
+            dummy.routines = updatedRoutines
               }}
         >+ Add Routine</button>
       </div>
@@ -86,16 +129,29 @@ function Routines() {
         {routines.map((routine) => (
           <div key={routine.id} className="bg-white p-6 rounded-2xl shadow-sm border border-purple-100">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">{routine.name}</h2>
-              <button
-              onClick={() => {
-                      setTargetRoutineId(routine.id)
-                      setSelectedRoutine(null) // Blank template for new routine
-                      setView("editor")
-                    }}
-              className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-4 py-1.5 rounded-xl text-sm font-medium transition">
-                Add Workout
-              </button>
+              <input
+                    type="text"
+                    value={routine.name}
+                    onChange={(e) => handleRoutineNameChange(routine.id, e.target.value)}
+                    className="text-lg font-semibold text-gray-800 bg-transparent border-b border-transparent hover:border-purple-200 focus:border-purple-600 focus:outline-none px-1 py-0.5 transition"
+                  />
+                <div className="flex items-center gap-2">
+                  <button
+                      onClick={() => handleDeleteRoutine(routine.id)}
+                      className="bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-xl text-sm font-medium transition"
+                  >
+                        Delete Routine
+                  </button>
+                    <button
+                        onClick={() => {
+                        setTargetRoutineId(routine.id)
+                        setSelectedRoutine(null)
+                        setView("editor")
+                      }}
+                                className="bg-purple-100 text-purple-700 hover:bg-purple-200 px-4 py-1.5 rounded-xl text-sm font-medium transition">
+                  Add Workout
+                                </button>
+                </div>
             </div>
             
             {/* workout chip buttons */}
@@ -104,6 +160,7 @@ function Routines() {
                 <button
                  className="cursor-pointer"
                  onClick={()=>{
+                  setTargetRoutineId(routine.id)
                   setSelectedRoutine(workout)
                   setView("editor")
                 }}
