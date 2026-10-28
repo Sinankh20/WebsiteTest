@@ -48,10 +48,12 @@ function RouteComponent() {
         <RoutineChoice />
       </div>
       {choiceContainerView=='hidden' &&(
-        <button onClick={handleStartWorkout}>Start Workout</button>
+        <button
+        className='text-2xl font-bold border rounded px-3.5 py-1' 
+        onClick={handleStartWorkout}>Start Workout</button>
       )}
       <div>
-        <h2>This week you trained for:</h2>
+        <h2 className='mt-3'>This week you trained for:</h2>
 
       </div>
       
