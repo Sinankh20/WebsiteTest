@@ -29,7 +29,7 @@ function History() {
     }
 
     const selectedDateString = formatDateString(date)
-    const selectedWorkout = historyList.find(item => item.date === selectedDateString)
+    const selectedWorkouts = historyList.filter(item => item.date === selectedDateString)
 
     const tileContent = ({ date, view }) => {
         if (view === 'month') {
@@ -115,24 +115,28 @@ function History() {
                             </span>
                         </div>
 
-                        {selectedWorkout ? (
-                            <div className="bg-purple-50 p-4 rounded-xl border border-purple-200 flex flex-col gap-3">
-                                <div className="flex justify-between items-center">
-                                    <h4 className="font-bold text-purple-900 text-base">{selectedWorkout.title}</h4>
-                                    <span className="text-xs bg-purple-600 text-white px-2.5 py-0.5 rounded-full font-medium">
-                                        Completed
-                                    </span>
-                                </div>
-                                <p className="text-xs text-purple-700">
-                                    Duration: <span className="font-semibold">{selectedWorkout.durationMinutes} mins</span> • Volume: <span className="font-semibold">{selectedWorkout.totalVolumeKg} Kg</span> • PRs: <span className="font-semibold">{selectedWorkout.prsAchieved}</span>
-                                </p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {selectedWorkout.completedExercises.map((ex, idx) => (
-                                        <span key={idx} className="text-xs bg-white text-purple-800 px-2.5 py-1 rounded-md border border-purple-200 font-medium">
-                                            {ex}
-                                        </span>
-                                    ))}
-                                </div>
+                        {selectedWorkouts.length > 0 ? (
+                            <div className="space-y-3">
+                                {selectedWorkouts.map((workout) => (
+                                    <div key={workout.id} className="bg-purple-50 p-4 rounded-xl border border-purple-200 flex flex-col gap-3">
+                                        <div className="flex justify-between items-center">
+                                            <h4 className="font-bold text-purple-900 text-base">{workout.title}</h4>
+                                            <span className="text-xs bg-purple-600 text-white px-2.5 py-0.5 rounded-full font-medium">
+                                                Completed
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-purple-700">
+                                            Duration: <span className="font-semibold">{workout.durationMinutes} mins</span> • Volume: <span className="font-semibold">{workout.totalVolumeKg} Kg</span> • PRs: <span className="font-semibold">{workout.prsAchieved}</span>
+                                        </p>
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {workout.completedExercises.map((ex, idx) => (
+                                                <span key={idx} className="text-xs bg-white text-purple-800 px-2.5 py-1 rounded-md border border-purple-200 font-medium">
+                                                    {ex}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         ) : (
                             <div className="bg-gray-50 p-6 rounded-xl border border-dashed border-gray-200 text-center text-gray-400 text-xs font-medium">
