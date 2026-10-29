@@ -183,7 +183,7 @@ export default function ActiveSession() {
       id: `workout-${Date.now()}`,
       date: formatDateString(new Date()),
       title: sessionTitle,
-      durationMinutes: Math.floor(seconds / 60),
+      durationMinutes: Math.round(seconds / 60),
       totalVolumeKg: totalVolume,
       prsAchieved: 1,
       completedExercises: exercises.map((ex) => ex.name),

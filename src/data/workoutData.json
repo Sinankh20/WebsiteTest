@@ -15,9 +15,9 @@
           "name": "Push",
           "targetMuscles": ["Chest", "Shoulders", "Triceps"],
           "exercises": [
-            { "exerciseId": "ex-bench-press","name": "Bench Press", "sets": 4, "targetReps": "8-12", "targetWeightKg": 80 },
-            { "exerciseId": "ex-overhead-press", "sets": 3, "targetReps": "8-10", "targetWeightKg": 50 },
-            { "exerciseId": "ex-tricep-pushdown", "sets": 3, "targetReps": "12-15", "targetWeightKg": 35 }
+            { "id": "ex-bench-press","name": "Bench Press", "sets": 4, "targetReps": "8-12", "targetWeightKg": 80 },
+            { "id": "ex-overhead-press","name": "Bench Press", "sets": 3, "targetReps": "8-10", "targetWeightKg": 50 },
+            { "id": "ex-tricep-pushdown","name": "Bench Press", "sets": 3, "targetReps": "12-15", "targetWeightKg": 35 }
           ]
         },
         {
@@ -25,9 +25,9 @@
           "name": "Pull",
           "targetMuscles": ["Back", "Biceps"],
           "exercises": [
-            { "exerciseId": "ex-lat-pulldown", "sets": 4, "targetReps": "10-12", "targetWeightKg": 65 },
-            { "exerciseId": "ex-barbell-row", "sets": 3, "targetReps": "8-10", "targetWeightKg": 70 },
-            { "exerciseId": "ex-bicep-curl", "sets": 3, "targetReps": "12-15", "targetWeightKg": 16 }
+            { "id": "ex-lat-pulldown","name": "Bench Press", "sets": 4, "targetReps": "10-12", "targetWeightKg": 65 },
+            { "id": "ex-barbell-row","name": "Bench Press", "sets": 3, "targetReps": "8-10", "targetWeightKg": 70 },
+            { "id": "ex-bicep-curl","name": "Bench Press", "sets": 3, "targetReps": "12-15", "targetWeightKg": 16 }
           ]
         },
         {
@@ -35,9 +35,9 @@
           "name": "Legs",
           "targetMuscles": ["Quads", "Hamstrings", "Calves"],
           "exercises": [
-            { "exerciseId": "ex-squat", "sets": 4, "targetReps": "6-8", "targetWeightKg": 100 },
-            { "exerciseId": "ex-romanian-deadlift", "sets": 3, "targetReps": "10-12", "targetWeightKg": 90 },
-            { "exerciseId": "ex-leg-press", "sets": 3, "targetReps": "12-15", "targetWeightKg": 160 }
+            { "id": "ex-squat","name": "Bench Press", "sets": 4, "targetReps": "6-8", "targetWeightKg": 100 },
+            { "id": "ex-romanian-deadlift","name": "Bench Press", "sets": 3, "targetReps": "10-12", "targetWeightKg": 90 },
+            { "id": "ex-leg-press", "sets": 3,"name": "Bench Press", "targetReps": "12-15", "targetWeightKg": 160 }
           ]
         }
       ]
@@ -52,8 +52,8 @@
           "name": "Upper",
           "targetMuscles": ["Chest", "Back", "Shoulders", "Arms"],
           "exercises": [
-            { "exerciseId": "ex-bench-press", "sets": 3, "targetReps": "8-12", "targetWeightKg": 82.5 },
-            { "exerciseId": "ex-lat-pulldown", "sets": 3, "targetReps": "10-12", "targetWeightKg": 70 }
+            { "id": "ex-bench-press", "sets": 3, "targetReps": "8-12", "targetWeightKg": 82.5 },
+            { "id": "ex-lat-pulldown", "sets": 3, "targetReps": "10-12", "targetWeightKg": 70 }
           ]
         },
         {
@@ -61,7 +61,7 @@
           "name": "Lower",
           "targetMuscles": ["Quads", "Hamstrings", "Glutes"],
           "exercises": [
-            { "exerciseId": "ex-squat", "sets": 4, "targetReps": "8-10", "targetWeightKg": 105 }
+            { "id": "ex-squat", "sets": 4, "targetReps": "8-10", "targetWeightKg": 105 }
           ]
         }
       ]

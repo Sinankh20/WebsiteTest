@@ -38,61 +38,74 @@ function Routines() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
-      {view === "editor" && (
-        <WorkoutEditor 
-            data={selectedRoutine}
-            routineName={targetRoutine?.name}
-            handleSave={(newWorkoutData) => {
-              // temp database change
-                alert("Workout saved successfully!")
-                console.log("Saved routine:", newWorkoutData)
-                
-                const newWorkout = {
-                  id: `workout-${Date.now()}`,
-                  name: newWorkoutData.title,
-                  exercises: newWorkoutData.exercises
-                }
+    <div className="p-6 max-w-4xl mx-auto space-y-6 relative">
+      {/* workouteditor */}
 
+        <div className={`fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-2 md:p-4 overflow-y-auto transition-all duration-500 ${view==='editor' ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`}>
+          <div className="bg-white w-full h-full md:h-auto md:max-h-[90vh] md:max-w-4xl md:rounded-2xl shadow-2xl p-4 md:p-6 overflow-y-auto flex flex-col transition-all duration-300">
+            <WorkoutEditor 
+                key={selectedRoutine?.id}
+                data={selectedRoutine}
+                routineName={targetRoutine?.name}
+                handleSave={(newWorkoutData) => {
                 const updatedRoutines = routines.map(routine => {
-                  if (routine.id === targetRoutineId) {
+                  if (routine.id !== targetRoutineId) return routine
+                  if (newWorkoutData.id) {
                     return {
                       ...routine,
-                      workouts: [...routine.workouts, newWorkout]
+                      workouts: routine.workouts.map(workout =>
+                        workout.id === newWorkoutData.id
+                          ? { ...workout, name: newWorkoutData.name, exercises: newWorkoutData.exercises }
+                          : workout
+                      )
                     }
                   }
-                  return routine
+                  return {
+                    ...routine,
+                    workouts: [
+                      ...routine.workouts,
+                      {
+                        id: `workout-${Date.now()}`,
+                        name: newWorkoutData.name,
+                        exercises: newWorkoutData.exercises
+                      }
+                    ]
+                  }
                 })
+                alert("Workout saved successfully!")
+                console.log("Saved routine:", newWorkoutData)
 
                 setRoutines(updatedRoutines)
                 dummy.routines = updatedRoutines
                 setView("none")
-            }}
-            handleDelete={selectedRoutine ? () => {
-                const confirm = window.confirm("Are you sure you want to delete this workout?")
-                if (confirm) {
-                  const updatedRoutines = routines.map(routine => {
-                    if (routine.id === targetRoutineId) {
-                      return {
-                        ...routine,
-                        workouts: routine.workouts.filter(w => w.id !== selectedRoutine.id)
-                      }
+              }}
+                handleDelete={selectedRoutine ? () => {
+                    const confirm = window.confirm("Are you sure you want to delete this workout?")
+                    if (confirm) {
+                      const updatedRoutines = routines.map(routine => {
+                        if (routine.id === targetRoutineId) {
+                          return {
+                            ...routine,
+                            workouts: routine.workouts.filter(w => w.id !== selectedRoutine.id)
+                          }
+                        }
+                        return routine
+                      })
+                      setRoutines(updatedRoutines)
+                      dummy.routines = updatedRoutines
+                      setView("none")
                     }
-                    return routine
-                  })
-                  setRoutines(updatedRoutines)
-                  dummy.routines = updatedRoutines
-                  setView("none")
-                }
-              } : null}
-            handleCancel={() => {
-              const confirm = window.confirm("Are you sure you want to discard this workout?")
-              if (confirm) {
-                setView("none")
-              }
-            }}
-        />
-      )}
+                  } : null}
+                handleCancel={() => {
+                  const confirm = window.confirm("Are you sure you want to discard this workout?")
+                  if (confirm) {
+                    setView("none")
+                  }
+                }}
+            />
+          </div>
+        </div>
+
     
       {view === "none" && (
         <>

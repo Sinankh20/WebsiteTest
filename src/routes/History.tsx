@@ -19,8 +19,8 @@ function History() {
     const startingIndex= (currentPage-1)*itemsPerPage
     const finalHistoryList=historyList.slice(startingIndex,startingIndex+itemsPerPage)
 
-    const handlePrevPage=()=> setCurrentPage(prev=>Math.max(prev-1,1))
-    const handleNextPage=()=>setCurrentPage(prev=>Math.min(prev+1,pages))
+    const handlePrevPage=()=> setCurrentPage(prev=>prev-1)
+    const handleNextPage=()=>setCurrentPage(prev=>(prev+1))
     const formatDateString = (dateObj) => {
         const year = dateObj.getFullYear()
         const month = String(dateObj.getMonth() + 1).padStart(2, '0')

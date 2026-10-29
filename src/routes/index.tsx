@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import RoutineChoice from '../components/RoutineChoice'
-
+import dummy from '../data/workoutData.json'
 export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
@@ -37,26 +37,64 @@ function RouteComponent() {
     } else setChoiceContainerView('')
   }
   //hours per week
-  const startOfTheWeek=(date)=>{
-    const dateobj=new Date(date)
-    const day=dateobj.getDay()
-    
+  const minWorkoutThisWeek=()=>{
+    const now= new Date()
+    const startWeekDay= new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay())
+    const endOfTheWeek= new Date(startWeekDay.getFullYear(), startWeekDay.getMonth(), startWeekDay.getDate() + 7)
+    const sum=dummy.history.filter(item=>{
+      const [yyyy,mm,dd]= item.date.split('-').map(Number)
+      const itemDate=new Date(yyyy,mm-1,dd)
+      return itemDate>=startWeekDay && itemDate<endOfTheWeek
+    }).reduce((acc,item)=> (item.durationMinutes+acc),0)
+    return sum
+  }
+  const minPerWeek=minWorkoutThisWeek()
+    const h = Math.floor(minPerWeek / 60)
+    const m = minPerWeek % 60
+
+  const weeklyVolume=()=>{
+    const now= new Date()
+    const startWeekDay= new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay())
+    const endOfTheWeek= new Date(startWeekDay.getFullYear(), startWeekDay.getMonth(), startWeekDay.getDate() + 7)
+    const sum=dummy.history.filter(item=>{
+      const [yyyy,mm,dd]= item.date.split('-').map(Number)
+      const itemDate=new Date(yyyy,mm-1,dd)
+      return itemDate>=startWeekDay && itemDate<endOfTheWeek
+    }).reduce((acc,item)=> (item.totalVolumeKg+acc),0)
+    return sum
   }
   return (
-    <div>
+    <div className="p-6 max-w-xl mx-auto space-y-6">
       <div className={choiceContainerView}>
         <RoutineChoice />
       </div>
-      {choiceContainerView=='hidden' &&(
-        <button
-        className='text-2xl font-bold border rounded px-3.5 py-1' 
-        onClick={handleStartWorkout}>Start Workout</button>
-      )}
-      <div>
-        <h2 className='mt-3'>This week you trained for:</h2>
 
+      {choiceContainerView === 'hidden' && (
+        <button
+          className="text-xl font-bold border border-current rounded px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          onClick={handleStartWorkout}
+        >
+          Start Workout
+        </button>
+      )}
+
+      {/* weekly stats cards */}
+      <div className="space-y-3 pt-2">
+        <h3 className="text-xs font-bold uppercase tracking-wider opacity-60">Weekly Stats</h3>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="border border-current rounded-lg p-4 flex flex-col justify-between">
+            <span className="text-sm opacity-70">This week you trained for:</span>
+            <span className="text-xl font-bold mt-2">{h}h {m}min</span>
+          </div>
+
+          {/* Card 2: Total Volume Lifted */}
+          <div className="border border-current rounded-lg p-4 flex flex-col justify-between">
+            <span className="text-sm opacity-70">You also lifted:</span>
+            <span className="text-xl font-bold mt-2">{weeklyVolume()} Kgs</span>
+          </div>
+        </div>
       </div>
-      
     </div>
   )
 }

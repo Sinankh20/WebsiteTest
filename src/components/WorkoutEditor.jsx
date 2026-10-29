@@ -2,13 +2,12 @@ import React from "react";
 import { useState } from "react";
 
 export default function WorkoutEditor({
-  data = { title: "New Workout", exercises: [] },
-  routineName,
+  data = { name: "New Workout", exercises: [] },
   handleSave,
   handleDelete,
   handleCancel,
 }) {
-  const initialTitle = data?.title || "New Workout";
+  const initialTitle = data?.name || "New Workout";
   const initialExercises =
     Array.isArray(data?.exercises) && data.exercises.length > 0
       ? data.exercises
@@ -85,7 +84,7 @@ export default function WorkoutEditor({
       <div className="p-6 border rounded-lg space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="flex flex-col gap-1 w-full md:w-auto">
-            <label className="text-xs">Session Title</label>
+            <label className="text-xs">Workout Title</label>
             <input
               type="text"
               value={title}
@@ -289,7 +288,7 @@ export default function WorkoutEditor({
             Discard
           </button>
           <button
-            onClick={() => handleSave({ title, exercises })}
+            onClick={() => handleSave({ id: data?.id, name: title, exercises })}
             className="border px-6 py-2.5 rounded text-sm font-medium"
           >
             Save
