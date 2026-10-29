@@ -63,6 +63,8 @@ function RouteComponent() {
     }).reduce((acc,item)=> (item.totalVolumeKg+acc),0)
     return sum
   }
+  const btnPrimary =
+    "rounded-xl bg-gray-900 text-white hover:bg-black text-sm font-medium shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
   return (
     <div className="p-6 max-w-xl mx-auto space-y-6">
       <div className={choiceContainerView}>
@@ -71,7 +73,7 @@ function RouteComponent() {
 
       {choiceContainerView === 'hidden' && (
         <button
-          className="text-xl font-bold border border-current rounded px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          className={`text-xl font-bold border border-current rounded px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors `}
           onClick={handleStartWorkout}
         >
           Start Workout

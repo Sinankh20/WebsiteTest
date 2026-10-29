@@ -111,16 +111,104 @@
       "durationMinutes": 58,
       "totalVolumeKg": 6800,
       "prsAchieved": 1,
-      "completedExercises": ["Barbell Squat", "Romanian Deadlift", "Leg Extension"]
+      "completedExercises": ["Barbell Squat", "Romanian Deadlift", "Leg Extension"],
+      "exercises": [
+        {
+          "id": "ex-squat",
+          "name": "Barbell Squat",
+          "category": "Legs",
+          "description": "A lower-body compound movement working the quadriceps, glutes, and hamstrings.",
+          "videoUrl": "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 8, "weightKg": 90, "completed": true, "restTimerSec": 120 },
+            { "setNum": 2, "reps": 8, "weightKg": 100, "completed": true, "restTimerSec": 120 },
+            { "setNum": 3, "reps": 6, "weightKg": 105, "completed": true, "restTimerSec": 150 },
+            { "setNum": 4, "reps": 6, "weightKg": 110, "completed": true, "restTimerSec": 150 }
+          ]
+        },
+        {
+          "id": "ex-romanian-deadlift",
+          "name": "Romanian Deadlift",
+          "category": "Hamstrings",
+          "description": "Compound lift emphasizing hamstring and glute development.",
+          "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 10, "weightKg": 85, "completed": true, "restTimerSec": 90 },
+            { "setNum": 2, "reps": 10, "weightKg": 90, "completed": true, "restTimerSec": 90 },
+            { "setNum": 3, "reps": 8, "weightKg": 95, "completed": true, "restTimerSec": 120 }
+          ]
+        },
+        {
+          "id": "ex-leg-extension",
+          "name": "Leg Extension",
+          "category": "Quads",
+          "description": "Isolation exercise targeting the quadriceps muscle group.",
+          "videoUrl": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 12, "weightKg": 60, "completed": true, "restTimerSec": 60 },
+            { "setNum": 2, "reps": 12, "weightKg": 65, "completed": true, "restTimerSec": 60 },
+            { "setNum": 3, "reps": 10, "weightKg": 70, "completed": true, "restTimerSec": 60 }
+          ]
+        }
+      ]
     },
     {
       "id": "hist-102",
       "date": "2026-10-22",
       "title": "Pull Routine",
-      "durationMinutes": 45,
+      "durationMinutes": 70,
       "totalVolumeKg": 4900,
       "prsAchieved": 0,
-      "completedExercises": ["Lat Pulldown", "Barbell Row", "Face Pulls", "Bicep Curl"]
+      "completedExercises": ["Lat Pulldown", "Barbell Row", "Face Pulls", "Bicep Curl"],
+      "exercises": [
+        {
+          "id": "ex-lat-pulldown",
+          "name": "Lat Pulldown",
+          "category": "Back",
+          "description": "Upper-body strength training exercise designed to target the latissimus dorsi muscle.",
+          "videoUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 12, "weightKg": 60, "completed": true, "restTimerSec": 90 },
+            { "setNum": 2, "reps": 10, "weightKg": 65, "completed": true, "restTimerSec": 90 },
+            { "setNum": 3, "reps": 10, "weightKg": 65, "completed": true, "restTimerSec": 90 }
+          ]
+        },
+        {
+          "id": "ex-barbell-row",
+          "name": "Barbell Row",
+          "category": "Back",
+          "description": "Compound exercise targeting back thickness and core stability.",
+          "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 10, "weightKg": 65, "completed": true, "restTimerSec": 90 },
+            { "setNum": 2, "reps": 8, "weightKg": 70, "completed": true, "restTimerSec": 90 },
+            { "setNum": 3, "reps": 8, "weightKg": 70, "completed": true, "restTimerSec": 90 }
+          ]
+        },
+        {
+          "id": "ex-face-pull",
+          "name": "Face Pulls",
+          "category": "Shoulders",
+          "description": "Cable exercise for rear delts and upper back health.",
+          "videoUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 15, "weightKg": 25, "completed": true, "restTimerSec": 60 },
+            { "setNum": 2, "reps": 15, "weightKg": 25, "completed": true, "restTimerSec": 60 }
+          ]
+        },
+        {
+          "id": "ex-bicep-curl",
+          "name": "Bicep Curl",
+          "category": "Biceps",
+          "description": "Isolation exercise for bicep hypertrophy.",
+          "videoUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 12, "weightKg": 14, "completed": true, "restTimerSec": 60 },
+            { "setNum": 2, "reps": 12, "weightKg": 16, "completed": true, "restTimerSec": 60 },
+            { "setNum": 3, "reps": 10, "weightKg": 16, "completed": true, "restTimerSec": 60 }
+          ]
+        }
+      ]
     },
     {
       "id": "hist-103",
@@ -129,7 +217,45 @@
       "durationMinutes": 52,
       "totalVolumeKg": 5400,
       "prsAchieved": 2,
-      "completedExercises": ["Incline Bench Press", "Seated Cable Row", "Dumbbell Lateral Raise"]
+      "completedExercises": ["Incline Bench Press", "Seated Cable Row", "Dumbbell Lateral Raise"],
+      "exercises": [
+        {
+          "id": "ex-incline-bench",
+          "name": "Incline Bench Press",
+          "category": "Chest",
+          "description": "Compound pressing movement targeting the upper chest and anterior shoulders.",
+          "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 10, "weightKg": 70, "completed": true, "restTimerSec": 90 },
+            { "setNum": 2, "reps": 8, "weightKg": 75, "completed": true, "restTimerSec": 90 },
+            { "setNum": 3, "reps": 8, "weightKg": 75, "completed": true, "restTimerSec": 90 }
+          ]
+        },
+        {
+          "id": "ex-seated-cable-row",
+          "name": "Seated Cable Row",
+          "category": "Back",
+          "description": "Cable exercise focusing on mid-back thickness.",
+          "videoUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 12, "weightKg": 65, "completed": true, "restTimerSec": 90 },
+            { "setNum": 2, "reps": 10, "weightKg": 70, "completed": true, "restTimerSec": 90 },
+            { "setNum": 3, "reps": 10, "weightKg": 70, "completed": true, "restTimerSec": 90 }
+          ]
+        },
+        {
+          "id": "ex-db-lateral-raise",
+          "name": "Dumbbell Lateral Raise",
+          "category": "Shoulders",
+          "description": "Isolation movement targeting lateral deltoids.",
+          "videoUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+          "sets": [
+            { "setNum": 1, "reps": 15, "weightKg": 12.5, "completed": true, "restTimerSec": 60 },
+            { "setNum": 2, "reps": 12, "weightKg": 12.5, "completed": true, "restTimerSec": 60 },
+            { "setNum": 3, "reps": 12, "weightKg": 15, "completed": true, "restTimerSec": 60 }
+          ]
+        }
+      ]
     }
   ],
   "exerciseLibrary": [

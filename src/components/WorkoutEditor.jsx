@@ -78,58 +78,68 @@ export default function WorkoutEditor({
 
   const safeExercisesList = Array.isArray(exercises) ? exercises : [];
 
+  const btnSecondary =
+    "rounded-xl border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400";
+  const btnPrimary =
+    "rounded-xl bg-gray-900 text-white hover:bg-black text-sm font-medium shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2";
+  const numInput =
+    "w-20 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-sm text-gray-800 focus:border-gray-900 focus:outline-none";
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-6">
       {/* Header */}
-      <div className="p-6 border rounded-lg space-y-4">
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6 shadow-sm space-y-5">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="flex flex-col gap-1 w-full md:w-auto">
-            <label className="text-xs">Workout Title</label>
+          <div className="flex flex-col gap-1 w-full md:w-auto md:min-w-96">
+            <label className="text-xs font-medium text-gray-500">Workout Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="text-xl font-bold border-b focus:outline-none px-1 py-0.5 w-full"
+              className="text-2xl font-bold text-gray-800 border-b border-gray-300 focus:border-gray-900 focus:outline-none px-1 py-0.5 w-full"
             />
           </div>
           <button
             onClick={handleAddExercise}
-            className="border px-4 py-2 rounded text-sm font-medium whitespace-nowrap"
+            className={`${btnSecondary} px-4 py-2 whitespace-nowrap`}
           >
             + Add Exercise
           </button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t text-center">
-          <div className="p-3 border rounded-lg">
-            <span className="block text-xs mb-1">Duration</span>
-            <span className="text-base font-bold">-</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 pt-5 border-t border-gray-200">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <span className="block text-xs text-gray-600 mb-1">Duration</span>
+            <span className="text-xl font-bold text-gray-900">-</span>
           </div>
-          <div className="p-3 border rounded-lg">
-            <span className="block text-xs mb-1">PRs</span>
-            <span className="text-base font-bold">-</span>
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <span className="block text-xs text-gray-600 mb-1">PRs</span>
+            <span className="text-xl font-bold text-gray-900">-</span>
           </div>
-          <div className="p-3 border rounded-lg">
-            <span className="block text-xs mb-1">Exercises</span>
-            <span className="text-base font-bold">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <span className="block text-xs text-gray-600 mb-1">Exercises</span>
+            <span className="text-xl font-bold text-gray-900">
               {safeExercisesList.length}
             </span>
           </div>
-          <div className="p-3 border rounded-lg">
-            <span className="block text-xs mb-1">Volume</span>
-            <span className="text-base font-bold">-</span>
+          <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+            <span className="block text-xs text-gray-600 mb-1">Volume</span>
+            <span className="text-xl font-bold text-gray-900">-</span>
           </div>
         </div>
       </div>
 
       {/* Exercises */}
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-start">
         {safeExercisesList.map((exercise) => {
           const safeSets = Array.isArray(exercise.sets) ? exercise.sets : [];
 
           return (
-            <div key={exercise.id} className="p-6 border rounded-lg space-y-4">
-              <div className="flex justify-between items-center gap-4">
+            <div
+              key={exercise.id}
+              className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm space-y-4"
+            >
+              <div className="flex justify-between items-center gap-3">
                 <input
                   type="text"
                   value={exercise.name}
@@ -145,11 +155,11 @@ export default function WorkoutEditor({
                       ),
                     );
                   }}
-                  className="text-base font-bold border-b focus:outline-none px-1 py-0.5 w-full"
+                  className="text-base font-bold text-gray-800 border-b border-gray-300 focus:border-gray-900 focus:outline-none px-1 py-0.5 w-full"
                 />
                 <button
                   onClick={() => handleDeleteExercise(exercise.id)}
-                  className="border px-3 py-1.5 rounded text-xs whitespace-nowrap"
+                  className={`${btnSecondary} px-3 py-1.5 text-xs whitespace-nowrap`}
                 >
                   Delete Exercise
                 </button>
@@ -159,21 +169,21 @@ export default function WorkoutEditor({
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b text-xs font-semibold">
+                    <tr className="border-b border-gray-200 text-xs font-semibold text-gray-500">
                       <th className="py-2 px-3">Sets</th>
                       <th className="py-2 px-3">Weight</th>
                       <th className="py-2 px-3">Reps</th>
-                      <th className="py-2 px-3 text-center">TEST</th>
+                      <th className="py-2 px-3 text-center">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y">
+                  <tbody className="divide-y divide-gray-100">
                     {safeSets.map((set, index) => {
                       return (
-                        <tr key={set.id}>
-                          <td className="py-3 px-3 text-xs font-bold">
+                        <tr key={set.id} className="odd:bg-white even:bg-gray-50">
+                          <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
                             #{index + 1}
                           </td>
-                          <td className="py-3 px-3">
+                          <td className="py-2.5 px-3">
                             <input
                               type="number"
                               value={set.weight}
@@ -205,10 +215,10 @@ export default function WorkoutEditor({
                                   ),
                                 );
                               }}
-                              className="w-15 border rounded px-2.5 py-1.5 text-xs focus:outline-none"
+                              className={numInput}
                             />
                           </td>
-                          <td className="py-3 px-3">
+                          <td className="py-2.5 px-3">
                             <input
                               type="number"
                               value={set.reps}
@@ -240,17 +250,18 @@ export default function WorkoutEditor({
                                   ),
                                 );
                               }}
-                              className="w-15 border rounded px-2.5 py-1.5 text-xs focus:outline-none"
+                              className={numInput}
                             />
                           </td>
-                          <td className="py-3 px-3 text-center">
+                          <td className="py-2.5 px-3 text-center">
                             <button
-                              className="text-sm p-1"
+                              aria-label="Delete set"
+                              className="rounded-lg px-2 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition"
                               onClick={() =>
                                 handleDeleteSet(exercise.id, set.id)
                               }
                             >
-                              🗑️
+                              ✕
                             </button>
                           </td>
                         </tr>
@@ -261,7 +272,7 @@ export default function WorkoutEditor({
               </div>
               <button
                 onClick={() => handleAddSet(exercise.id)}
-                className="border px-4 py-2 rounded text-xs font-medium w-full md:w-auto"
+                className={`${btnSecondary} px-4 py-2 text-xs w-full md:w-auto`}
               >
                 + Add Set
               </button>
@@ -271,25 +282,25 @@ export default function WorkoutEditor({
       </div>
 
       {/* Footer */}
-      <div className="p-4 border rounded-lg flex flex-1 justify-between items-center gap-4">
+      <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm flex flex-1 justify-between items-center gap-4">
         {handleDelete && (
           <button
             onClick={handleDelete}
-            className="border px-5 py-2.5 rounded text-sm font-medium "
+            className={`${btnSecondary} px-5 py-2.5`}
           >
             Delete
           </button>
         )}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           <button
             onClick={handleCancel}
-            className="border px-3.5 py-2.5 rounded text-sm font-medium"
+            className={`${btnSecondary} px-4 py-2.5`}
           >
             Discard
           </button>
           <button
             onClick={() => handleSave({ id: data?.id, name: title, exercises })}
-            className="border px-6 py-2.5 rounded text-sm font-medium"
+            className={`${btnPrimary} px-6 py-2.5`}
           >
             Save
           </button>
