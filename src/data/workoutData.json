@@ -15,9 +15,37 @@
           "name": "Push",
           "targetMuscles": ["Chest", "Shoulders", "Triceps"],
           "exercises": [
-            { "id": "ex-bench-press","name": "Bench Press", "sets": 4, "targetReps": "8-12", "targetWeightKg": 80 },
-            { "id": "ex-overhead-press","name": "Bench Press", "sets": 3, "targetReps": "8-10", "targetWeightKg": 50 },
-            { "id": "ex-tricep-pushdown","name": "Bench Press", "sets": 3, "targetReps": "12-15", "targetWeightKg": 35 }
+            {
+              "id": "ex-bench-press",
+              "name": "Bench Press",
+              "restTimeSec": 120,
+              "sets": [
+                { "id": 1, "weight": 80, "reps": 8, "done": false },
+                { "id": 2, "weight": 80, "reps": 8, "done": false },
+                { "id": 3, "weight": 80, "reps": 8, "done": false },
+                { "id": 4, "weight": 80, "reps": 8, "done": false }
+              ]
+            },
+            {
+              "id": "ex-overhead-press",
+              "name": "Overhead Press",
+              "restTimeSec": 90,
+              "sets": [
+                { "id": 1, "weight": 50, "reps": 8, "done": false },
+                { "id": 2, "weight": 50, "reps": 8, "done": false },
+                { "id": 3, "weight": 50, "reps": 8, "done": false }
+              ]
+            },
+            {
+              "id": "ex-tricep-pushdown",
+              "name": "Tricep Pushdown",
+              "restTimeSec": 60,
+              "sets": [
+                { "id": 1, "weight": 35, "reps": 12, "done": false },
+                { "id": 2, "weight": 35, "reps": 12, "done": false },
+                { "id": 3, "weight": 35, "reps": 12, "done": false }
+              ]
+            }
           ]
         },
         {
@@ -25,9 +53,37 @@
           "name": "Pull",
           "targetMuscles": ["Back", "Biceps"],
           "exercises": [
-            { "id": "ex-lat-pulldown","name": "Bench Press", "sets": 4, "targetReps": "10-12", "targetWeightKg": 65 },
-            { "id": "ex-barbell-row","name": "Bench Press", "sets": 3, "targetReps": "8-10", "targetWeightKg": 70 },
-            { "id": "ex-bicep-curl","name": "Bench Press", "sets": 3, "targetReps": "12-15", "targetWeightKg": 16 }
+            {
+              "id": "ex-lat-pulldown",
+              "name": "Lat Pulldown",
+              "restTimeSec": 90,
+              "sets": [
+                { "id": 1, "weight": 65, "reps": 10, "done": false },
+                { "id": 2, "weight": 65, "reps": 10, "done": false },
+                { "id": 3, "weight": 65, "reps": 10, "done": false },
+                { "id": 4, "weight": 65, "reps": 10, "done": false }
+              ]
+            },
+            {
+              "id": "ex-barbell-row",
+              "name": "Barbell Row",
+              "restTimeSec": 90,
+              "sets": [
+                { "id": 1, "weight": 70, "reps": 8, "done": false },
+                { "id": 2, "weight": 70, "reps": 8, "done": false },
+                { "id": 3, "weight": 70, "reps": 8, "done": false }
+              ]
+            },
+            {
+              "id": "ex-bicep-curl",
+              "name": "Bicep Curl",
+              "restTimeSec": 60,
+              "sets": [
+                { "id": 1, "weight": 16, "reps": 12, "done": false },
+                { "id": 2, "weight": 16, "reps": 12, "done": false },
+                { "id": 3, "weight": 16, "reps": 12, "done": false }
+              ]
+            }
           ]
         },
         {
@@ -35,9 +91,37 @@
           "name": "Legs",
           "targetMuscles": ["Quads", "Hamstrings", "Calves"],
           "exercises": [
-            { "id": "ex-squat","name": "Bench Press", "sets": 4, "targetReps": "6-8", "targetWeightKg": 100 },
-            { "id": "ex-romanian-deadlift","name": "Bench Press", "sets": 3, "targetReps": "10-12", "targetWeightKg": 90 },
-            { "id": "ex-leg-press", "sets": 3,"name": "Bench Press", "targetReps": "12-15", "targetWeightKg": 160 }
+            {
+              "id": "ex-squat",
+              "name": "Barbell Squat",
+              "restTimeSec": 150,
+              "sets": [
+                { "id": 1, "weight": 100, "reps": 6, "done": false },
+                { "id": 2, "weight": 100, "reps": 6, "done": false },
+                { "id": 3, "weight": 100, "reps": 6, "done": false },
+                { "id": 4, "weight": 100, "reps": 6, "done": false }
+              ]
+            },
+            {
+              "id": "ex-romanian-deadlift",
+              "name": "Romanian Deadlift",
+              "restTimeSec": 120,
+              "sets": [
+                { "id": 1, "weight": 90, "reps": 10, "done": false },
+                { "id": 2, "weight": 90, "reps": 10, "done": false },
+                { "id": 3, "weight": 90, "reps": 10, "done": false }
+              ]
+            },
+            {
+              "id": "ex-leg-press",
+              "name": "Leg Press",
+              "restTimeSec": 90,
+              "sets": [
+                { "id": 1, "weight": 160, "reps": 12, "done": false },
+                { "id": 2, "weight": 160, "reps": 12, "done": false },
+                { "id": 3, "weight": 160, "reps": 12, "done": false }
+              ]
+            }
           ]
         }
       ]
@@ -52,8 +136,26 @@
           "name": "Upper",
           "targetMuscles": ["Chest", "Back", "Shoulders", "Arms"],
           "exercises": [
-            { "id": "ex-bench-press", "sets": 3, "targetReps": "8-12", "targetWeightKg": 82.5 },
-            { "id": "ex-lat-pulldown", "sets": 3, "targetReps": "10-12", "targetWeightKg": 70 }
+            {
+              "id": "ex-bench-press",
+              "name": "Bench Press",
+              "restTimeSec": 120,
+              "sets": [
+                { "id": 1, "weight": 82.5, "reps": 8, "done": false },
+                { "id": 2, "weight": 82.5, "reps": 8, "done": false },
+                { "id": 3, "weight": 82.5, "reps": 8, "done": false }
+              ]
+            },
+            {
+              "id": "ex-lat-pulldown",
+              "name": "Lat Pulldown",
+              "restTimeSec": 90,
+              "sets": [
+                { "id": 1, "weight": 70, "reps": 10, "done": false },
+                { "id": 2, "weight": 70, "reps": 10, "done": false },
+                { "id": 3, "weight": 70, "reps": 10, "done": false }
+              ]
+            }
           ]
         },
         {
@@ -61,7 +163,17 @@
           "name": "Lower",
           "targetMuscles": ["Quads", "Hamstrings", "Glutes"],
           "exercises": [
-            { "id": "ex-squat", "sets": 4, "targetReps": "8-10", "targetWeightKg": 105 }
+            {
+              "id": "ex-squat",
+              "name": "Barbell Squat",
+              "restTimeSec": 150,
+              "sets": [
+                { "id": 1, "weight": 105, "reps": 8, "done": false },
+                { "id": 2, "weight": 105, "reps": 8, "done": false },
+                { "id": 3, "weight": 105, "reps": 8, "done": false },
+                { "id": 4, "weight": 105, "reps": 8, "done": false }
+              ]
+            }
           ]
         }
       ]
@@ -83,6 +195,7 @@
         "category": "Chest",
         "description": "A core compound weight training exercise where you lie on a bench and push a weight upward using a barbell or dumbbells.",
         "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+        "restTimeSec": 120,
         "sets": [
           { "setNum": 1, "reps": 12, "weightKg": 80, "completed": true, "restTimerSec": 90 },
           { "setNum": 2, "reps": 10, "weightKg": 80, "completed": true, "restTimerSec": 90 },
@@ -95,6 +208,7 @@
         "category": "Shoulders",
         "description": "Standing barbell overhead press for building shoulder strength and core stability.",
         "videoUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+        "restTimeSec": 90,
         "sets": [
           { "setNum": 1, "reps": 10, "weightKg": 50, "completed": false, "restTimerSec": 90 },
           { "setNum": 2, "reps": 10, "weightKg": 50, "completed": false, "restTimerSec": 90 },
@@ -119,6 +233,7 @@
           "category": "Legs",
           "description": "A lower-body compound movement working the quadriceps, glutes, and hamstrings.",
           "videoUrl": "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 150,
           "sets": [
             { "setNum": 1, "reps": 8, "weightKg": 90, "completed": true, "restTimerSec": 120 },
             { "setNum": 2, "reps": 8, "weightKg": 100, "completed": true, "restTimerSec": 120 },
@@ -132,6 +247,7 @@
           "category": "Hamstrings",
           "description": "Compound lift emphasizing hamstring and glute development.",
           "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 120,
           "sets": [
             { "setNum": 1, "reps": 10, "weightKg": 85, "completed": true, "restTimerSec": 90 },
             { "setNum": 2, "reps": 10, "weightKg": 90, "completed": true, "restTimerSec": 90 },
@@ -144,6 +260,7 @@
           "category": "Quads",
           "description": "Isolation exercise targeting the quadriceps muscle group.",
           "videoUrl": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 60,
           "sets": [
             { "setNum": 1, "reps": 12, "weightKg": 60, "completed": true, "restTimerSec": 60 },
             { "setNum": 2, "reps": 12, "weightKg": 65, "completed": true, "restTimerSec": 60 },
@@ -167,6 +284,7 @@
           "category": "Back",
           "description": "Upper-body strength training exercise designed to target the latissimus dorsi muscle.",
           "videoUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 90,
           "sets": [
             { "setNum": 1, "reps": 12, "weightKg": 60, "completed": true, "restTimerSec": 90 },
             { "setNum": 2, "reps": 10, "weightKg": 65, "completed": true, "restTimerSec": 90 },
@@ -179,6 +297,7 @@
           "category": "Back",
           "description": "Compound exercise targeting back thickness and core stability.",
           "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 90,
           "sets": [
             { "setNum": 1, "reps": 10, "weightKg": 65, "completed": true, "restTimerSec": 90 },
             { "setNum": 2, "reps": 8, "weightKg": 70, "completed": true, "restTimerSec": 90 },
@@ -191,6 +310,7 @@
           "category": "Shoulders",
           "description": "Cable exercise for rear delts and upper back health.",
           "videoUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 60,
           "sets": [
             { "setNum": 1, "reps": 15, "weightKg": 25, "completed": true, "restTimerSec": 60 },
             { "setNum": 2, "reps": 15, "weightKg": 25, "completed": true, "restTimerSec": 60 }
@@ -202,6 +322,7 @@
           "category": "Biceps",
           "description": "Isolation exercise for bicep hypertrophy.",
           "videoUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 60,
           "sets": [
             { "setNum": 1, "reps": 12, "weightKg": 14, "completed": true, "restTimerSec": 60 },
             { "setNum": 2, "reps": 12, "weightKg": 16, "completed": true, "restTimerSec": 60 },
@@ -225,6 +346,7 @@
           "category": "Chest",
           "description": "Compound pressing movement targeting the upper chest and anterior shoulders.",
           "videoUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 90,
           "sets": [
             { "setNum": 1, "reps": 10, "weightKg": 70, "completed": true, "restTimerSec": 90 },
             { "setNum": 2, "reps": 8, "weightKg": 75, "completed": true, "restTimerSec": 90 },
@@ -237,6 +359,7 @@
           "category": "Back",
           "description": "Cable exercise focusing on mid-back thickness.",
           "videoUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 90,
           "sets": [
             { "setNum": 1, "reps": 12, "weightKg": 65, "completed": true, "restTimerSec": 90 },
             { "setNum": 2, "reps": 10, "weightKg": 70, "completed": true, "restTimerSec": 90 },
@@ -249,6 +372,7 @@
           "category": "Shoulders",
           "description": "Isolation movement targeting lateral deltoids.",
           "videoUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80",
+          "restTimeSec": 60,
           "sets": [
             { "setNum": 1, "reps": 15, "weightKg": 12.5, "completed": true, "restTimerSec": 60 },
             { "setNum": 2, "reps": 12, "weightKg": 12.5, "completed": true, "restTimerSec": 60 },
