@@ -8,38 +8,37 @@ export default function WorkoutEditor({
   handleCancel,
 }) {
   const initialTitle = data?.name || "New Workout";
-  const initialExercises =
-    Array.isArray(data?.exercises) && data.exercises.length > 0
-      ? data.exercises
-      : [
-          {
-            id: 1,
-            name: "Barbell Bench Press",
-            sets: [
-              { id: 1, weight: 80, reps: 10 },
-              { id: 2, weight: 85, reps: 8 },
-            ],
-          },
-        ];
 
   const [title, setTitle] = useState(initialTitle);
-  const [exercises, setExercises] = useState(initialExercises);
+  const [exercises, setExercises] = useState(() => {
+    if (Array.isArray(data?.exercises) && data.exercises.length > 0) {
+      return structuredClone(data.exercises);
+    }
+    return [
+      {
+        id: `ex-${Date.now()}`,
+        name: "Barbell Bench Press",
+        restTimeSec: 60,
+        sets: [
+          { id: 1, weight: 80, reps: 10, done: false },
+          { id: 2, weight: 85, reps: 8, done: false },
+        ],
+      },
+    ];
+  });
 
   const handleAddExercise = () => {
     const safeExercises = Array.isArray(exercises) ? exercises : [];
-    const newExId =
-      safeExercises.length > 0
-        ? safeExercises[safeExercises.length - 1].id + 1
-        : 1;
     setExercises([
       ...safeExercises,
       {
-        id: newExId,
+        id: `ex-${Date.now()}`,
         name: "New Exercise",
-        sets: [{ id: 1, weight: 0, reps: 0 }],
+        restTimeSec: 60,
+        sets: [{ id: 1, weight: 0, reps: 0, done: false }],
       },
     ]);
-  };
+};
 
   const handleDeleteExercise = (exercisesId) => {
     const safeExercises = Array.isArray(exercises) ? exercises : [];
@@ -56,7 +55,7 @@ export default function WorkoutEditor({
             safeSets.length > 0 ? safeSets[safeSets.length - 1].id + 1 : 1;
           return {
             ...item,
-            sets: [...safeSets, { id: newSetId, weight: 0, reps: 0 }],
+            sets: [...safeSets, { id: newSetId, weight: 0, reps: 0, done: false }],
           };
         }
         return item;
@@ -78,6 +77,26 @@ export default function WorkoutEditor({
 
   const safeExercisesList = Array.isArray(exercises) ? exercises : [];
 
+  const handleSaveClick = () => {
+  const cleanedExercises = safeExercisesList.map((ex) => ({
+    ...ex,
+    name: (ex.name ?? "").trim() || "New Exercise",
+    restTimeSec: Number(ex.restTimeSec) || 0,
+    sets: (Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => ({
+      id: i + 1,
+      weight: Number(s.weight) || 0,
+      reps: Number(s.reps) || 0,
+      done: false,
+    })),
+  }));
+
+  handleSave({
+    id: data?.id,
+    name: title.trim() || "New Workout",
+    exercises: cleanedExercises,
+  });
+};
+
   const btnSecondary =
     "rounded-xl border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400";
   const btnPrimary =
@@ -91,7 +110,9 @@ export default function WorkoutEditor({
       <div className="rounded-2xl border border-gray-200 bg-white p-5 md:p-6 shadow-sm space-y-5">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="flex flex-col gap-1 w-full md:w-auto md:min-w-96">
-            <label className="text-xs font-medium text-gray-500">Workout Title</label>
+            <label className="text-xs font-medium text-gray-500">
+              Workout Title
+            </label>
             <input
               type="text"
               value={title}
@@ -133,36 +154,92 @@ export default function WorkoutEditor({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-start">
         {safeExercisesList.map((exercise) => {
           const safeSets = Array.isArray(exercise.sets) ? exercise.sets : [];
+          const totalRestSec = exercise.restTimeSec || 0;
+          const currentMins = Math.floor(totalRestSec / 60);
+          const currentSecs = totalRestSec % 60;
 
           return (
             <div
               key={exercise.id}
               className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm space-y-4"
             >
-              <div className="flex justify-between items-center gap-3">
-                <input
-                  type="text"
-                  value={exercise.name}
-                  onChange={(e) => {
-                    const currentExercises = Array.isArray(exercises)
-                      ? exercises
-                      : [];
-                    setExercises(
-                      currentExercises.map((item) =>
-                        item.id === exercise.id
-                          ? { ...item, name: e.target.value }
-                          : item,
-                      ),
-                    );
-                  }}
-                  className="text-base font-bold text-gray-800 border-b border-gray-300 focus:border-gray-900 focus:outline-none px-1 py-0.5 w-full"
-                />
-                <button
-                  onClick={() => handleDeleteExercise(exercise.id)}
-                  className={`${btnSecondary} px-3 py-1.5 text-xs whitespace-nowrap`}
-                >
-                  Delete Exercise
-                </button>
+              <div className="flex flex-col gap-3">
+                <div className="flex justify-between items-center gap-3">
+                  <input
+                    type="text"
+                    value={exercise.name}
+                    onChange={(e) => {
+                      const currentExercises = Array.isArray(exercises)
+                        ? exercises
+                        : [];
+                      setExercises(
+                        currentExercises.map((item) =>
+                          item.id === exercise.id
+                            ? { ...item, name: e.target.value }
+                            : item,
+                        ),
+                      );
+                    }}
+                    className="text-base font-bold text-gray-800 border-b border-gray-300 focus:border-gray-900 focus:outline-none px-1 py-0.5 w-full"
+                  />
+                  <button
+                    onClick={() => handleDeleteExercise(exercise.id)}
+                    className={`${btnSecondary} px-3 py-1.5 text-xs whitespace-nowrap`}
+                  >
+                    Delete Exercise
+                  </button>
+                </div>
+
+                {/* rest timer */}
+                <div className="flex items-center gap-2 text-xs text-gray-600 pt-1">
+                  <span className="font-medium">Rest Time:</span>
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      min="0"
+                      max="10"
+                      value={currentMins}
+                      onChange={(e) => {
+                        parseInt(e.target.value) >10 ? e.target.value=10 : e.target.value=+e.target.value
+                        const mins = Math.max(0, parseInt(e.target.value) || 0);
+                        const newTotalSec = mins * 60 + currentSecs;
+                        setExercises(
+                          exercises.map((item) =>
+                            item.id === exercise.id
+                              ? { ...item, restTimeSec: newTotalSec }
+                              : item,
+                          ),
+                        );
+                      }}
+                      className="w-14 rounded-lg border border-gray-300 bg-white px-2 py-1 text-xs text-center focus:border-gray-900 focus:outline-none"
+                      placeholder="Mins"
+                    />
+                    <span>min</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      min="0"
+                      max="59"
+                      value={currentSecs}
+                      onChange={(e) => {
+                        parseInt(e.target.value) >59 ? e.target.value=59 : e.target.value=+e.target.value
+                        const secs = Math.max(0, parseInt(e.target.value) || 0);
+                        const newTotalSec = currentMins * 60 + secs;
+                        setExercises(
+                          exercises.map((item) =>
+                            item.id === exercise.id
+                              ? { ...item, restTimeSec: newTotalSec }
+                              : item,
+                          ),
+                        );
+                      }}
+                      className="w-14 rounded-lg border border-gray-300 bg-white px-2 py-1 text-xs text-center focus:border-gray-900 focus:outline-none"
+                      placeholder="Secs"
+                    />
+                    <span>sec</span>
+                  </div>
+                </div>
               </div>
 
               {/* Sets tables */}
@@ -179,7 +256,10 @@ export default function WorkoutEditor({
                   <tbody className="divide-y divide-gray-100">
                     {safeSets.map((set, index) => {
                       return (
-                        <tr key={set.id} className="odd:bg-white even:bg-gray-50">
+                        <tr
+                          key={set.id}
+                          className="odd:bg-white even:bg-gray-50"
+                        >
                           <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
                             #{index + 1}
                           </td>
@@ -299,7 +379,7 @@ export default function WorkoutEditor({
             Discard
           </button>
           <button
-            onClick={() => handleSave({ id: data?.id, name: title, exercises })}
+            onClick={handleSaveClick}
             className={`${btnPrimary} px-6 py-2.5`}
           >
             Save
