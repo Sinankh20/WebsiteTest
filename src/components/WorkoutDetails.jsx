@@ -19,8 +19,21 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
   const exercises = Array.isArray(data?.exercises) ? data.exercises : [];
 
   const stats = [
-    { label: "Duration", value: data?.durationMinutes<60 ? data?.durationMinutes : `${Math.round(data?.durationMinutes/60)} ${Math.round(data?.durationMinutes/60)>1 ? 'hrs' : 'hr'} ${data?.durationMinutes%60}` ?? data?.duration ?? "-", unit: "min" },
-    { label: "Volume", value: data?.totalVolumeKg ?? data?.totalVolumeKG ?? "-", unit: "kg" },
+    {
+      label: "Duration",
+      value:
+        data?.durationMinutes < 60
+          ? data?.durationMinutes
+          : (`${Math.round(data?.durationMinutes / 60)} ${Math.round(data?.durationMinutes / 60) > 1 ? "hrs" : "hr"} ${data?.durationMinutes % 60}` ??
+            data?.duration ??
+            "-"),
+      unit: "min",
+    },
+    {
+      label: "Volume",
+      value: data?.totalVolumeKg ?? data?.totalVolumeKG ?? "-",
+      unit: "kg",
+    },
     { label: "PRs", value: data?.prsAchieved ?? "-" },
     { label: "Exercises", value: exercises.length },
   ];
@@ -32,7 +45,9 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-1">
           <div>
             <p className="text-xs font-medium text-gray-500">Workout</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">{title}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+              {title}
+            </h2>
           </div>
           {data?.date && (
             <span className="self-start md:self-auto text-xs font-medium text-gray-600 bg-gray-50 border border-gray-200 px-3 py-1 rounded-full">
@@ -47,11 +62,15 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
               key={s.label}
               className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3"
             >
-              <span className="block text-xs text-gray-600 mb-1">{s.label}</span>
+              <span className="block text-xs text-gray-600 mb-1">
+                {s.label}
+              </span>
               <span className="text-xl font-bold text-gray-900">
                 {s.value}
                 {s.unit && s.value !== "-" && (
-                  <span className="ml-1 text-xs font-medium text-gray-500">{s.unit}</span>
+                  <span className="ml-1 text-xs font-medium text-gray-500">
+                    {s.unit}
+                  </span>
                 )}
               </span>
             </div>
@@ -72,7 +91,9 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
                 className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
               >
                 <div className="flex items-center justify-between gap-3 mb-3">
-                  <h3 className="text-base font-bold text-gray-800">{exercise.name}</h3>
+                  <h3 className="text-base font-bold text-gray-800">
+                    {exercise.name}
+                  </h3>
                   <span className="text-xs font-medium text-gray-600 bg-gray-50 border border-gray-200 px-2.5 py-0.5 rounded-full">
                     {sets.length} {sets.length === 1 ? "set" : "sets"}
                   </span>
@@ -95,7 +116,10 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                       {sets.map((set, index) => (
-                        <tr key={set.id ?? index} className="odd:bg-white even:bg-gray-50">
+                        <tr
+                          key={set.id ?? index}
+                          className="odd:bg-white even:bg-gray-50"
+                        >
                           <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
                             {index + 1}
                           </td>
@@ -107,7 +131,9 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
                             <>
                               <td className="py-2.5 px-3 text-sm text-gray-800">
                                 {set.weightKg ?? set.weight ?? "-"}
-                                <span className="ml-1 text-xs text-gray-400">kg</span>
+                                <span className="ml-1 text-xs text-gray-400">
+                                  kg
+                                </span>
                               </td>
                               <td className="py-2.5 px-3 text-sm text-gray-800">
                                 {set.reps ?? "-"}

@@ -37,20 +37,20 @@ export default function ActiveSession() {
   });
 
   const [exercises, setExercises] = useState(() => {
-  const saved = localStorage.getItem(keyLocalStorage);
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved).exercises;
-      if (Array.isArray(parsed)) return parsed;
-    } catch (e) {}
-  }
+    const saved = localStorage.getItem(keyLocalStorage);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved).exercises;
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {}
+    }
 
-  const findWorkout = dummy.routines
-    .flatMap((routine) => routine.workouts)
-    .find((workout) => String(workout.id) === id);
+    const findWorkout = dummy.routines
+      .flatMap((routine) => routine.workouts)
+      .find((workout) => String(workout.id) === id);
 
-  return structuredClone(findWorkout?.exercises ?? []);
-});
+    return structuredClone(findWorkout?.exercises ?? []);
+  });
 
   // Workout Timer
   const [startTime, setStartTimer] = useState(() => {
@@ -81,13 +81,13 @@ export default function ActiveSession() {
         );
       } catch (e) {}
     }
-   return {
-    active: false,
-    targetEndTimeMs: 0,
-    exerciseId: null,
-    setId: null,
-    exerciseName: "",
-    setNum: 0,
+    return {
+      active: false,
+      targetEndTimeMs: 0,
+      exerciseId: null,
+      setId: null,
+      exerciseName: "",
+      setNum: 0,
     };
   });
 
@@ -119,8 +119,14 @@ export default function ActiveSession() {
       cardioTimer,
     };
     localStorage.setItem(keyLocalStorage, JSON.stringify(sessionData));
-  }, [sessionTitle, exercises, startTime, restTimer, cardioTimer, keyLocalStorage]);
-
+  }, [
+    sessionTitle,
+    exercises,
+    startTime,
+    restTimer,
+    cardioTimer,
+    keyLocalStorage,
+  ]);
 
   useEffect(() => {
     setSeconds(Math.floor((Date.now() - startTime) / 1000));
@@ -141,7 +147,7 @@ export default function ActiveSession() {
       const diffSecs = Math.ceil(diffMs / 1000);
       if (diffSecs <= 0) {
         setRemainingSecs(0);
-        
+
         setRestTimer((prev) => ({ ...prev, active: false }));
       } else {
         setRemainingSecs(diffSecs);
@@ -178,7 +184,9 @@ export default function ActiveSession() {
   const getSetDisplaySec = (set) => {
     const banked = set.timeSec || 0;
     if (cardioTimer.active && cardioTimer.setId === set.id) {
-      return banked + Math.floor(Math.max(0, cardioNow - cardioTimer.start) / 1000);
+      return (
+        banked + Math.floor(Math.max(0, cardioNow - cardioTimer.start) / 1000)
+      );
     }
     return banked;
   };
@@ -213,7 +221,12 @@ export default function ActiveSession() {
   const handlePauseSetTimer = (exerciseId, setId) => {
     const now = Date.now();
     bankSetTime(exerciseId, setId, now);
-    setCardioTimer({ active: false, start: now, exerciseId: null, setId: null });
+    setCardioTimer({
+      active: false,
+      start: now,
+      exerciseId: null,
+      setId: null,
+    });
   };
 
   const handleToggleSet = (exerciseId, setId) => {
@@ -557,7 +570,10 @@ export default function ActiveSession() {
                       const displaySec = getSetDisplaySec(set);
 
                       return (
-                        <tr key={set.id} className="odd:bg-white even:bg-gray-50">
+                        <tr
+                          key={set.id}
+                          className="odd:bg-white even:bg-gray-50"
+                        >
                           <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
                             #{index + 1}
                           </td>
@@ -576,7 +592,11 @@ export default function ActiveSession() {
                                   }
                                   className={`${isRunning ? btnPrimary : btnSecondary} px-3 py-1.5 text-xs disabled:opacity-40`}
                                 >
-                                  {isRunning ? "Pause" : displaySec > 0 ? "Resume" : "Start"}
+                                  {isRunning
+                                    ? "Pause"
+                                    : displaySec > 0
+                                      ? "Resume"
+                                      : "Start"}
                                 </button>
                               </div>
                             </td>
@@ -634,7 +654,9 @@ export default function ActiveSession() {
                           )}
                           <td className="py-2.5 px-3">
                             <button
-                              onClick={() => handleToggleSet(exercise.id, set.id)}
+                              onClick={() =>
+                                handleToggleSet(exercise.id, set.id)
+                              }
                               className={`${set.done ? btnPrimary : btnSecondary} px-3 py-1.5 text-xs`}
                             >
                               {set.done ? "✓ Done" : "Mark"}
@@ -642,7 +664,9 @@ export default function ActiveSession() {
                           </td>
                           <td className="py-2.5 px-3 text-center">
                             <button
-                              onClick={() => handleDeleteSet(exercise.id, set.id)}
+                              onClick={() =>
+                                handleDeleteSet(exercise.id, set.id)
+                              }
                               aria-label="Delete set"
                               className="rounded-lg px-2 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition"
                             >

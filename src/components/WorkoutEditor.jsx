@@ -40,7 +40,7 @@ export default function WorkoutEditor({
         sets: [{ id: 1, weight: 0, reps: 0, timeSec: 0, done: false }],
       },
     ]);
-};
+  };
 
   const handleDeleteExercise = (exercisesId) => {
     const safeExercises = Array.isArray(exercises) ? exercises : [];
@@ -83,29 +83,29 @@ export default function WorkoutEditor({
   const safeExercisesList = Array.isArray(exercises) ? exercises : [];
 
   const handleSaveClick = () => {
-  const cleanedExercises = safeExercisesList.map((ex) => {
-    const mode = ex.mode === "time" ? "time" : "weight";
-    return {
-      ...ex,
-      name: (ex.name ?? "").trim() || "New Exercise",
-      mode,
-      restTimeSec: Number(ex.restTimeSec) || 0,
-      sets: (Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => ({
-        id: i + 1,
-        weight: mode === "weight" ? Number(s.weight) || 0 : 0,
-        reps: mode === "weight" ? Number(s.reps) || 0 : 0,
-        timeSec: mode === "time" ? Number(s.timeSec) || 0 : 0,
-        done: false,
-      })),
-    };
-  });
+    const cleanedExercises = safeExercisesList.map((ex) => {
+      const mode = ex.mode === "time" ? "time" : "weight";
+      return {
+        ...ex,
+        name: (ex.name ?? "").trim() || "New Exercise",
+        mode,
+        restTimeSec: Number(ex.restTimeSec) || 0,
+        sets: (Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => ({
+          id: i + 1,
+          weight: mode === "weight" ? Number(s.weight) || 0 : 0,
+          reps: mode === "weight" ? Number(s.reps) || 0 : 0,
+          timeSec: mode === "time" ? Number(s.timeSec) || 0 : 0,
+          done: false,
+        })),
+      };
+    });
 
-  handleSave({
-    id: data?.id,
-    name: title.trim() || "New Workout",
-    exercises: cleanedExercises,
-  });
-};
+    handleSave({
+      id: data?.id,
+      name: title.trim() || "New Workout",
+      exercises: cleanedExercises,
+    });
+  };
 
   const btnSecondary =
     "rounded-xl border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400";
@@ -211,7 +211,9 @@ export default function WorkoutEditor({
                       max="10"
                       value={currentMins}
                       onChange={(e) => {
-                        parseInt(e.target.value) >10 ? e.target.value=10 : e.target.value=+e.target.value
+                        parseInt(e.target.value) > 10
+                          ? (e.target.value = 10)
+                          : (e.target.value = +e.target.value);
                         const mins = Math.max(0, parseInt(e.target.value) || 0);
                         const newTotalSec = mins * 60 + currentSecs;
                         setExercises(
@@ -234,7 +236,9 @@ export default function WorkoutEditor({
                       max="59"
                       value={currentSecs}
                       onChange={(e) => {
-                        parseInt(e.target.value) >59 ? e.target.value=59 : e.target.value=+e.target.value
+                        parseInt(e.target.value) > 59
+                          ? (e.target.value = 59)
+                          : (e.target.value = +e.target.value);
                         const secs = Math.max(0, parseInt(e.target.value) || 0);
                         const newTotalSec = currentMins * 60 + secs;
                         setExercises(

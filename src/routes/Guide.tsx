@@ -31,15 +31,17 @@ function Guide() {
     if (!foundExercise) return [];
     return dummy.history.filter((item) =>
       item.completedExercises?.some(
-        (ex) => ex.toLowerCase() === foundExercise.name.toLowerCase()
-      )
+        (ex) => ex.toLowerCase() === foundExercise.name.toLowerCase(),
+      ),
     );
   }, [foundExercise]);
 
   return (
     <div className="p-6 w-full max-w-6xl mx-auto flex flex-col gap-6 relative">
       {/* Details modal */}
-      <div className={`fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-2 md:p-4 overflow-y-auto transition-all duration-500 ${detailsView ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'}`}>
+      <div
+        className={`fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-2 md:p-4 overflow-y-auto transition-all duration-500 ${detailsView ? "opacity-100 visible pointer-events-auto" : "opacity-0 invisible pointer-events-none"}`}
+      >
         <div className="bg-white w-full h-full md:h-auto md:max-h-[90vh] md:max-w-6xl md:rounded-2xl shadow-2xl p-4 md:p-6 overflow-y-auto flex flex-col transition-all duration-300">
           <WorkoutDetails
             data={dataHandoffToDetails}
@@ -80,13 +82,17 @@ function Guide() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-5 border-t border-gray-200">
                 <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-                  <span className="block text-xs text-gray-600 mb-1">Category</span>
+                  <span className="block text-xs text-gray-600 mb-1">
+                    Category
+                  </span>
                   <span className="text-base font-bold text-gray-900">
                     {foundExercise.category}
                   </span>
                 </div>
                 <div className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-                  <span className="block text-xs text-gray-600 mb-1">Equipment</span>
+                  <span className="block text-xs text-gray-600 mb-1">
+                    Equipment
+                  </span>
                   <span className="text-base font-bold text-gray-900">
                     {foundExercise.equipment}
                   </span>
@@ -108,20 +114,28 @@ function Guide() {
                       >
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <h2 className="text-base font-bold text-gray-800">{item.title}</h2>
+                            <h2 className="text-base font-bold text-gray-800">
+                              {item.title}
+                            </h2>
                             <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full font-medium">
                               {item.date}
                             </span>
                           </div>
                           <p className="text-xs text-gray-500 mb-2">
-                            Duration: {item.durationMinutes < 60 ? `${item.durationMinutes} mins` : `${Math.round(item.durationMinutes / 60)} ${Math.round(item.durationMinutes / 60) > 1 ? 'hrs' : 'hr'} ${(Math.round(item.durationMinutes) % 60)} mins`} • Volume: {item.totalVolumeKg} Kg • PRs: {item.prsAchieved}
+                            Duration:{" "}
+                            {item.durationMinutes < 60
+                              ? `${item.durationMinutes} mins`
+                              : `${Math.round(item.durationMinutes / 60)} ${Math.round(item.durationMinutes / 60) > 1 ? "hrs" : "hr"} ${Math.round(item.durationMinutes) % 60} mins`}{" "}
+                            • Volume: {item.totalVolumeKg} Kg • PRs:{" "}
+                            {item.prsAchieved}
                           </p>
                           <div className="flex flex-wrap gap-1.5">
                             {item.completedExercises.map((ex, idx) => (
                               <span
                                 key={idx}
                                 className={`text-xs px-2 py-0.5 rounded-md border ${
-                                  ex.toLowerCase() === foundExercise.name.toLowerCase()
+                                  ex.toLowerCase() ===
+                                  foundExercise.name.toLowerCase()
                                     ? "bg-gray-900 text-white border-gray-900 font-semibold"
                                     : "bg-gray-50 text-gray-700 border-gray-200"
                                 }`}
