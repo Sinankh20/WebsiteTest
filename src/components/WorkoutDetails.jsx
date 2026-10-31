@@ -2,6 +2,18 @@ import React from "react";
 
 const EMPTY = { title: "New Workout", exercises: [] };
 
+const formatTimer = (totalSeconds) => {
+  const safeSeconds = Number(totalSeconds) || 0;
+  const mins = Math.floor(safeSeconds / 60);
+  const secs = safeSeconds % 60;
+  if (mins >= 60) {
+    const hrs = Math.floor(mins / 60);
+    const remainingMins = mins % 60;
+    return `${String(hrs).padStart(2, "0")}:${String(remainingMins).padStart(2, "0")}`;
+  }
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+};
+
 export default function WorkoutDetails({ data = EMPTY, handleExit }) {
   const title = data?.title ?? data?.name ?? "Untitled workout";
   const exercises = Array.isArray(data?.exercises) ? data.exercises : [];
@@ -52,6 +64,7 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {exercises.map((exercise, exIndex) => {
             const sets = Array.isArray(exercise.sets) ? exercise.sets : [];
+            const isTime = exercise.mode === "time";
 
             return (
               <article
@@ -70,8 +83,14 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
                     <thead>
                       <tr className="text-xs font-semibold text-gray-500 border-b border-gray-200">
                         <th className="py-2 px-3 w-16">Set</th>
-                        <th className="py-2 px-3">Weight</th>
-                        <th className="py-2 px-3">Reps</th>
+                        {isTime ? (
+                          <th className="py-2 px-3">Time</th>
+                        ) : (
+                          <>
+                            <th className="py-2 px-3">Weight</th>
+                            <th className="py-2 px-3">Reps</th>
+                          </>
+                        )}
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -80,13 +99,21 @@ export default function WorkoutDetails({ data = EMPTY, handleExit }) {
                           <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
                             {index + 1}
                           </td>
-                          <td className="py-2.5 px-3 text-sm text-gray-800">
-                            {set.weightKg ?? set.weight ?? "-"}
-                            <span className="ml-1 text-xs text-gray-400">kg</span>
-                          </td>
-                          <td className="py-2.5 px-3 text-sm text-gray-800">
-                            {set.reps ?? "-"}
-                          </td>
+                          {isTime ? (
+                            <td className="py-2.5 px-3 text-sm text-gray-800 tabular-nums">
+                              {formatTimer(set.timeSec)}
+                            </td>
+                          ) : (
+                            <>
+                              <td className="py-2.5 px-3 text-sm text-gray-800">
+                                {set.weightKg ?? set.weight ?? "-"}
+                                <span className="ml-1 text-xs text-gray-400">kg</span>
+                              </td>
+                              <td className="py-2.5 px-3 text-sm text-gray-800">
+                                {set.reps ?? "-"}
+                              </td>
+                            </>
+                          )}
                         </tr>
                       ))}
                     </tbody>

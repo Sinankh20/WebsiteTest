@@ -91,6 +91,23 @@ export default function ActiveSession() {
     };
   });
 
+  const [cardioTimer, setCardioTimer] = useState(() => {
+    const saved = localStorage.getItem(keyLocalStorage);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.cardioTimer) return parsed.cardioTimer;
+      } catch (e) {}
+    }
+    return {
+      active: false,
+      start: Date.now(),
+      exerciseId: null,
+      setId: null,
+    };
+  });
+  const [cardioNow, setCardioNow] = useState(Date.now());
+
   const [remainingSecs, setRemainingSecs] = useState(0);
 
   useEffect(() => {
@@ -99,11 +116,12 @@ export default function ActiveSession() {
       exercises,
       startTime,
       restTimer,
+      cardioTimer,
     };
     localStorage.setItem(keyLocalStorage, JSON.stringify(sessionData));
-  }, [sessionTitle, exercises, startTime, restTimer, keyLocalStorage]);
+  }, [sessionTitle, exercises, startTime, restTimer, cardioTimer, keyLocalStorage]);
 
-  // Workout elapsed duration timer
+
   useEffect(() => {
     setSeconds(Math.floor((Date.now() - startTime) / 1000));
     const timer = setInterval(() => {
@@ -112,7 +130,6 @@ export default function ActiveSession() {
     return () => clearInterval(timer);
   }, [startTime]);
 
-  // Rest Timer calculation loop using Date.now()
   useEffect(() => {
     if (!restTimer.active) {
       setRemainingSecs(0);
@@ -124,7 +141,7 @@ export default function ActiveSession() {
       const diffSecs = Math.ceil(diffMs / 1000);
       if (diffSecs <= 0) {
         setRemainingSecs(0);
-        // Automatically hide/deactivate the timer bar when reaching zero
+        
         setRestTimer((prev) => ({ ...prev, active: false }));
       } else {
         setRemainingSecs(diffSecs);
@@ -137,6 +154,16 @@ export default function ActiveSession() {
     return () => clearInterval(interval);
   }, [restTimer.active, restTimer.targetEndTimeMs]);
 
+  // Cardio/set timer calculation loop using Date.now()
+  useEffect(() => {
+    if (!cardioTimer.active) return;
+
+    const tick = () => setCardioNow(Date.now());
+    tick();
+    const interval = setInterval(tick, 250);
+    return () => clearInterval(interval);
+  }, [cardioTimer.active, cardioTimer.start]);
+
   const formatTimer = (totalSeconds) => {
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
@@ -148,10 +175,55 @@ export default function ActiveSession() {
     return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
+  const getSetDisplaySec = (set) => {
+    const banked = set.timeSec || 0;
+    if (cardioTimer.active && cardioTimer.setId === set.id) {
+      return banked + Math.floor(Math.max(0, cardioNow - cardioTimer.start) / 1000);
+    }
+    return banked;
+  };
+
+  const bankSetTime = (exerciseId, setId, atMs) => {
+    const elapsedSec = Math.floor(Math.max(0, atMs - cardioTimer.start) / 1000);
+    setExercises((prev) =>
+      prev.map((ex) =>
+        ex.id === exerciseId
+          ? {
+              ...ex,
+              sets: ex.sets.map((s) =>
+                s.id === setId
+                  ? { ...s, timeSec: (s.timeSec || 0) + elapsedSec }
+                  : s,
+              ),
+            }
+          : ex,
+      ),
+    );
+  };
+
+  const handleStartSetTimer = (exerciseId, setId) => {
+    const now = Date.now();
+    if (cardioTimer.active && cardioTimer.setId !== setId) {
+      bankSetTime(cardioTimer.exerciseId, cardioTimer.setId, now);
+    }
+    setCardioNow(now);
+    setCardioTimer({ active: true, start: now, exerciseId, setId });
+  };
+
+  const handlePauseSetTimer = (exerciseId, setId) => {
+    const now = Date.now();
+    bankSetTime(exerciseId, setId, now);
+    setCardioTimer({ active: false, start: now, exerciseId: null, setId: null });
+  };
+
   const handleToggleSet = (exerciseId, setId) => {
     const exercise = exercises.find((ex) => ex.id === exerciseId);
     const setIndex = exercise.sets.findIndex((s) => s.id === setId);
     const willBeDone = !exercise.sets[setIndex].done;
+
+    if (willBeDone && cardioTimer.active && cardioTimer.setId === setId) {
+      handlePauseSetTimer(exerciseId, setId);
+    }
 
     setExercises((prevExercises) =>
       prevExercises.map((ex) =>
@@ -202,8 +274,9 @@ export default function ActiveSession() {
       {
         id: newExId,
         name: "New Exercise",
+        mode: "weight",
         restTimeSec: 60,
-        sets: [{ id: 1, weight: 0, reps: 0, done: false }],
+        sets: [{ id: 1, weight: 0, reps: 0, timeSec: 0, done: false }],
       },
     ]);
   };
@@ -223,7 +296,7 @@ export default function ActiveSession() {
             ...ex,
             sets: [
               ...safeSets,
-              { id: newSetId, weight: 0, reps: 0, done: false },
+              { id: newSetId, weight: 0, reps: 0, timeSec: 0, done: false },
             ],
           };
         }
@@ -246,6 +319,7 @@ export default function ActiveSession() {
 
   const safeExercises = Array.isArray(exercises) ? exercises : [];
   const totalVolume = safeExercises.reduce((acc, ex) => {
+    if (ex.mode === "time") return acc;
     const safeSets = Array.isArray(ex.sets) ? ex.sets : [];
     return (
       acc +
@@ -362,6 +436,7 @@ export default function ActiveSession() {
           const totalRestSec = exercise.restTimeSec || 0;
           const currentMins = Math.floor(totalRestSec / 60);
           const currentSecs = totalRestSec % 60;
+          const isTime = exercise.mode === "time";
 
           return (
             <div
@@ -452,85 +527,131 @@ export default function ActiveSession() {
                   <thead>
                     <tr className="border-b border-gray-200 text-xs font-semibold text-gray-500">
                       <th className="py-2 px-3">Set</th>
-                      <th className="py-2 px-3">Weight (Kg)</th>
-                      <th className="py-2 px-3">Reps</th>
+                      <th className="py-2 px-3">
+                        <select
+                          value={exercise.mode || "weight"}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setExercises(
+                              exercises.map((item) =>
+                                item.id === exercise.id
+                                  ? { ...item, mode: val }
+                                  : item,
+                              ),
+                            );
+                          }}
+                        >
+                          <option value="weight">Weight (Kg)</option>
+                          <option value="time">Time</option>
+                        </select>
+                      </th>
+                      {!isTime && <th className="py-2 px-3">Reps</th>}
                       <th className="py-2 px-3">Status</th>
                       <th className="py-2 px-3 text-center">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {exercise.sets.map((set, index) => (
-                      <tr key={set.id} className="odd:bg-white even:bg-gray-50">
-                        <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
-                          #{index + 1}
-                        </td>
-                        <td className="py-2.5 px-3">
-                          <input
-                            type="number"
-                            value={set.weight}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setExercises(
-                                exercises.map((ex) =>
-                                  ex.id === exercise.id
-                                    ? {
-                                        ...ex,
-                                        sets: ex.sets.map((s) =>
-                                          s.id === set.id
-                                            ? { ...s, weight: val }
-                                            : s,
-                                        ),
-                                      }
-                                    : ex,
-                                ),
-                              );
-                            }}
-                            className={numInput}
-                          />
-                        </td>
-                        <td className="py-2.5 px-3">
-                          <input
-                            type="number"
-                            value={set.reps}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setExercises(
-                                exercises.map((ex) =>
-                                  ex.id === exercise.id
-                                    ? {
-                                        ...ex,
-                                        sets: ex.sets.map((s) =>
-                                          s.id === set.id
-                                            ? { ...s, reps: val }
-                                            : s,
-                                        ),
-                                      }
-                                    : ex,
-                                ),
-                              );
-                            }}
-                            className={numInput}
-                          />
-                        </td>
-                        <td className="py-2.5 px-3">
-                          <button
-                            onClick={() => handleToggleSet(exercise.id, set.id)}
-                            className={`${set.done ? btnPrimary : btnSecondary} px-3 py-1.5 text-xs`}
-                          >
-                            {set.done ? "✓ Done" : "Mark"}
-                          </button>
-                        </td>
-                        <td className="py-2.5 px-3 text-center">
-                          <button
-                            onClick={() => handleDeleteSet(exercise.id, set.id)}
-                            aria-label="Delete set"
-                            className="rounded-lg px-2 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition"
-                          >
-                            ✕
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {exercise.sets.map((set, index) => {
+                      const isRunning =
+                        cardioTimer.active && cardioTimer.setId === set.id;
+                      const displaySec = getSetDisplaySec(set);
+
+                      return (
+                        <tr key={set.id} className="odd:bg-white even:bg-gray-50">
+                          <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
+                            #{index + 1}
+                          </td>
+                          {isTime ? (
+                            <td className="py-2.5 px-3">
+                              <div className="flex items-center gap-2">
+                                <span className="w-14 text-sm tabular-nums text-gray-800">
+                                  {formatTimer(displaySec)}
+                                </span>
+                                <button
+                                  disabled={set.done}
+                                  onClick={() =>
+                                    isRunning
+                                      ? handlePauseSetTimer(exercise.id, set.id)
+                                      : handleStartSetTimer(exercise.id, set.id)
+                                  }
+                                  className={`${isRunning ? btnPrimary : btnSecondary} px-3 py-1.5 text-xs disabled:opacity-40`}
+                                >
+                                  {isRunning ? "Pause" : displaySec > 0 ? "Resume" : "Start"}
+                                </button>
+                              </div>
+                            </td>
+                          ) : (
+                            <>
+                              <td className="py-2.5 px-3">
+                                <input
+                                  type="number"
+                                  value={set.weight}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    setExercises(
+                                      exercises.map((ex) =>
+                                        ex.id === exercise.id
+                                          ? {
+                                              ...ex,
+                                              sets: ex.sets.map((s) =>
+                                                s.id === set.id
+                                                  ? { ...s, weight: val }
+                                                  : s,
+                                              ),
+                                            }
+                                          : ex,
+                                      ),
+                                    );
+                                  }}
+                                  className={numInput}
+                                />
+                              </td>
+                              <td className="py-2.5 px-3">
+                                <input
+                                  type="number"
+                                  value={set.reps}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    setExercises(
+                                      exercises.map((ex) =>
+                                        ex.id === exercise.id
+                                          ? {
+                                              ...ex,
+                                              sets: ex.sets.map((s) =>
+                                                s.id === set.id
+                                                  ? { ...s, reps: val }
+                                                  : s,
+                                              ),
+                                            }
+                                          : ex,
+                                      ),
+                                    );
+                                  }}
+                                  className={numInput}
+                                />
+                              </td>
+                            </>
+                          )}
+                          <td className="py-2.5 px-3">
+                            <button
+                              onClick={() => handleToggleSet(exercise.id, set.id)}
+                              className={`${set.done ? btnPrimary : btnSecondary} px-3 py-1.5 text-xs`}
+                            >
+                              {set.done ? "✓ Done" : "Mark"}
+                            </button>
+                          </td>
+                          <td className="py-2.5 px-3 text-center">
+                            <button
+                              onClick={() => handleDeleteSet(exercise.id, set.id)}
+                              aria-label="Delete set"
+                              className="rounded-lg px-2 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition"
+                            >
+                              ✕
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

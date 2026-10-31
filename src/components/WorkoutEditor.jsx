@@ -18,10 +18,11 @@ export default function WorkoutEditor({
       {
         id: `ex-${Date.now()}`,
         name: "Barbell Bench Press",
+        mode: "weight",
         restTimeSec: 60,
         sets: [
-          { id: 1, weight: 80, reps: 10, done: false },
-          { id: 2, weight: 85, reps: 8, done: false },
+          { id: 1, weight: 80, reps: 10, timeSec: 0, done: false },
+          { id: 2, weight: 85, reps: 8, timeSec: 0, done: false },
         ],
       },
     ];
@@ -34,8 +35,9 @@ export default function WorkoutEditor({
       {
         id: `ex-${Date.now()}`,
         name: "New Exercise",
+        mode: "weight",
         restTimeSec: 60,
-        sets: [{ id: 1, weight: 0, reps: 0, done: false }],
+        sets: [{ id: 1, weight: 0, reps: 0, timeSec: 0, done: false }],
       },
     ]);
 };
@@ -55,7 +57,10 @@ export default function WorkoutEditor({
             safeSets.length > 0 ? safeSets[safeSets.length - 1].id + 1 : 1;
           return {
             ...item,
-            sets: [...safeSets, { id: newSetId, weight: 0, reps: 0, done: false }],
+            sets: [
+              ...safeSets,
+              { id: newSetId, weight: 0, reps: 0, timeSec: 0, done: false },
+            ],
           };
         }
         return item;
@@ -78,17 +83,22 @@ export default function WorkoutEditor({
   const safeExercisesList = Array.isArray(exercises) ? exercises : [];
 
   const handleSaveClick = () => {
-  const cleanedExercises = safeExercisesList.map((ex) => ({
-    ...ex,
-    name: (ex.name ?? "").trim() || "New Exercise",
-    restTimeSec: Number(ex.restTimeSec) || 0,
-    sets: (Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => ({
-      id: i + 1,
-      weight: Number(s.weight) || 0,
-      reps: Number(s.reps) || 0,
-      done: false,
-    })),
-  }));
+  const cleanedExercises = safeExercisesList.map((ex) => {
+    const mode = ex.mode === "time" ? "time" : "weight";
+    return {
+      ...ex,
+      name: (ex.name ?? "").trim() || "New Exercise",
+      mode,
+      restTimeSec: Number(ex.restTimeSec) || 0,
+      sets: (Array.isArray(ex.sets) ? ex.sets : []).map((s, i) => ({
+        id: i + 1,
+        weight: mode === "weight" ? Number(s.weight) || 0 : 0,
+        reps: mode === "weight" ? Number(s.reps) || 0 : 0,
+        timeSec: mode === "time" ? Number(s.timeSec) || 0 : 0,
+        done: false,
+      })),
+    };
+  });
 
   handleSave({
     id: data?.id,
@@ -157,6 +167,7 @@ export default function WorkoutEditor({
           const totalRestSec = exercise.restTimeSec || 0;
           const currentMins = Math.floor(totalRestSec / 60);
           const currentSecs = totalRestSec % 60;
+          const isTime = exercise.mode === "time";
 
           return (
             <div
@@ -248,8 +259,29 @@ export default function WorkoutEditor({
                   <thead>
                     <tr className="border-b border-gray-200 text-xs font-semibold text-gray-500">
                       <th className="py-2 px-3">Sets</th>
-                      <th className="py-2 px-3">Weight</th>
-                      <th className="py-2 px-3">Reps</th>
+                      <th className="py-2 px-3">
+                        <select
+                          value={exercise.mode || "weight"}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const currentExercises = Array.isArray(exercises)
+                              ? exercises
+                              : [];
+                            setExercises(
+                              currentExercises.map((item) =>
+                                item.id === exercise.id
+                                  ? { ...item, mode: val }
+                                  : item,
+                              ),
+                            );
+                          }}
+                          className="rounded-lg border border-gray-300 bg-white px-1.5 py-1 text-xs font-semibold text-gray-600 focus:border-gray-900 focus:outline-none"
+                        >
+                          <option value="weight">Weight</option>
+                          <option value="time">Time</option>
+                        </select>
+                      </th>
+                      {!isTime && <th className="py-2 px-3">Reps</th>}
                       <th className="py-2 px-3 text-center">Action</th>
                     </tr>
                   </thead>
@@ -263,76 +295,119 @@ export default function WorkoutEditor({
                           <td className="py-2.5 px-3 text-xs font-bold text-gray-600">
                             #{index + 1}
                           </td>
-                          <td className="py-2.5 px-3">
-                            <input
-                              type="number"
-                              value={set.weight}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                const currentExercises = Array.isArray(
-                                  exercises,
-                                )
-                                  ? exercises
-                                  : [];
-                                setExercises(
-                                  currentExercises.map((item) =>
-                                    item.id === exercise.id
-                                      ? {
-                                          ...item,
-                                          sets: (Array.isArray(item.sets)
-                                            ? item.sets
-                                            : []
-                                          ).map((itemSet) =>
-                                            itemSet.id === set.id
-                                              ? {
-                                                  ...itemSet,
-                                                  weight: val,
-                                                }
-                                              : itemSet,
-                                          ),
-                                        }
-                                      : item,
-                                  ),
-                                );
-                              }}
-                              className={numInput}
-                            />
-                          </td>
-                          <td className="py-2.5 px-3">
-                            <input
-                              type="number"
-                              value={set.reps}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                const currentExercises = Array.isArray(
-                                  exercises,
-                                )
-                                  ? exercises
-                                  : [];
-                                setExercises(
-                                  currentExercises.map((item) =>
-                                    item.id === exercise.id
-                                      ? {
-                                          ...item,
-                                          sets: (Array.isArray(item.sets)
-                                            ? item.sets
-                                            : []
-                                          ).map((itemSet) =>
-                                            itemSet.id === set.id
-                                              ? {
-                                                  ...itemSet,
-                                                  reps: val,
-                                                }
-                                              : itemSet,
-                                          ),
-                                        }
-                                      : item,
-                                  ),
-                                );
-                              }}
-                              className={numInput}
-                            />
-                          </td>
+                          {isTime ? (
+                            <td className="py-2.5 px-3" colSpan={2}>
+                              <div className="flex items-center gap-1">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  value={set.timeSec ?? 0}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    const currentExercises = Array.isArray(
+                                      exercises,
+                                    )
+                                      ? exercises
+                                      : [];
+                                    setExercises(
+                                      currentExercises.map((item) =>
+                                        item.id === exercise.id
+                                          ? {
+                                              ...item,
+                                              sets: (Array.isArray(item.sets)
+                                                ? item.sets
+                                                : []
+                                              ).map((itemSet) =>
+                                                itemSet.id === set.id
+                                                  ? { ...itemSet, timeSec: val }
+                                                  : itemSet,
+                                              ),
+                                            }
+                                          : item,
+                                      ),
+                                    );
+                                  }}
+                                  className={numInput}
+                                />
+                                <span className="text-xs text-gray-500">
+                                  sec
+                                </span>
+                              </div>
+                            </td>
+                          ) : (
+                            <>
+                              <td className="py-2.5 px-3">
+                                <input
+                                  type="number"
+                                  value={set.weight}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    const currentExercises = Array.isArray(
+                                      exercises,
+                                    )
+                                      ? exercises
+                                      : [];
+                                    setExercises(
+                                      currentExercises.map((item) =>
+                                        item.id === exercise.id
+                                          ? {
+                                              ...item,
+                                              sets: (Array.isArray(item.sets)
+                                                ? item.sets
+                                                : []
+                                              ).map((itemSet) =>
+                                                itemSet.id === set.id
+                                                  ? {
+                                                      ...itemSet,
+                                                      weight: val,
+                                                    }
+                                                  : itemSet,
+                                              ),
+                                            }
+                                          : item,
+                                      ),
+                                    );
+                                  }}
+                                  className={numInput}
+                                />
+                              </td>
+                              <td className="py-2.5 px-3">
+                                <input
+                                  type="number"
+                                  value={set.reps}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    const currentExercises = Array.isArray(
+                                      exercises,
+                                    )
+                                      ? exercises
+                                      : [];
+                                    setExercises(
+                                      currentExercises.map((item) =>
+                                        item.id === exercise.id
+                                          ? {
+                                              ...item,
+                                              sets: (Array.isArray(item.sets)
+                                                ? item.sets
+                                                : []
+                                              ).map((itemSet) =>
+                                                itemSet.id === set.id
+                                                  ? {
+                                                      ...itemSet,
+                                                      reps: val,
+                                                    }
+                                                  : itemSet,
+                                              ),
+                                            }
+                                          : item,
+                                      ),
+                                    );
+                                  }}
+                                  className={numInput}
+                                />
+                              </td>
+                            </>
+                          )}
                           <td className="py-2.5 px-3 text-center">
                             <button
                               aria-label="Delete set"
