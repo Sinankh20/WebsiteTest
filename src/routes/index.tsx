@@ -25,7 +25,7 @@ function RouteComponent() {
       const saved = localStorage.getItem(oldSession)
       const prevSessionTitle = JSON.parse(saved)?.sessionTitle || 'Workout'
       const confirm = window.confirm(
-        `You already have an active ${prevSessionTitle} session! Would you like to continue where you left off or Delete the old session`
+        `You already have an active ${prevSessionTitle} session! Would you like to continue where you left off or Cancel the old session`
       )
       if (confirm) {
         const part = oldSession.split('_')[1]

@@ -110,7 +110,7 @@ function Routines() {
                   }
                 } : null}
               handleCancel={() => {
-                const confirm = window.confirm("Are you sure you want to discard this workout?")
+                const confirm = window.confirm("Are you sure you want to discard changes to this workout?")
                 if (confirm) {
                   setView("none")
                 }
